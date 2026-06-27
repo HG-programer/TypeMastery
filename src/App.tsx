@@ -3,14 +3,14 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 type Mode = 'Focus' | 'Speed' | 'Precision' | 'Programmer';
 
 const PROGRAMMER_SNIPPETS = [
-  'def binary_search(arr, target):',
-  'for(int i=0; i<n; i++) {',
-  'const response = await fetch(url);',
-  'HashMap<String, Integer> map = new HashMap<>();',
-  'SELECT * FROM users WHERE status = "active";',
-  'const total = items.reduce((a, b) => a + b, 0);',
-  'public static void main(String[] args) {',
-  'document.getElementById("btn").addEventListener("click", () => {',
+  { language: 'Python', icon: '🐍', text: 'def binary_search(arr, target):' },
+  { language: 'Java', icon: '☕', text: 'for(int i=0; i<n; i++) {' },
+  { language: 'JavaScript', icon: '⚡', text: 'const response = await fetch(url);' },
+  { language: 'Java', icon: '☕', text: 'HashMap<String, Integer> map = new HashMap<>();' },
+  { language: 'SQL', icon: '🗄️', text: 'SELECT * FROM users WHERE status = "active";' },
+  { language: 'JavaScript', icon: '⚡', text: 'const total = items.reduce((a, b) => a + b, 0);' },
+  { language: 'Java', icon: '☕', text: 'public static void main(String[] args) {' },
+  { language: 'JavaScript', icon: '⚡', text: 'document.getElementById("btn").addEventListener("click", () => {' },
 ];
 
 type PracticeSet = {
@@ -18,6 +18,8 @@ type PracticeSet = {
   title: string;
   description: string;
   text: string;
+  language?: string;
+  icon?: string;
 };
 
 type HistoryItem = {
@@ -161,11 +163,14 @@ function pickPracticeSet(mode: Mode, index: number) {
   if (mode === 'Speed') return PRACTICE_SETS[1];
   if (mode === 'Precision') return PRACTICE_SETS[2];
   if (mode === 'Programmer') {
+    const snippet = PROGRAMMER_SNIPPETS[index % PROGRAMMER_SNIPPETS.length];
     return {
       label: 'Programmer',
       title: 'Typing practice for programmers',
       description: 'Practice real syntax from Python, JS, Java, and SQL.',
-      text: PROGRAMMER_SNIPPETS[index % PROGRAMMER_SNIPPETS.length],
+      text: snippet.text,
+      language: snippet.language,
+      icon: snippet.icon,
     };
   }
   return PRACTICE_SETS[index % PRACTICE_SETS.length];
@@ -432,7 +437,7 @@ export default function App() {
             ))}
           </div>
 
-          <div className="typing-card">
+          <div className="typing-card fade-in" key={mode}>
             <div className="progress-row">
               <span>{Math.round(progress)}% complete</span>
               <span>{mistakes} errors</span>
@@ -440,6 +445,12 @@ export default function App() {
             <div className="progress-bar" aria-hidden="true">
               <span style={{ width: `${progress}%` }} />
             </div>
+            {currentSet.language && (
+              <div className="language-badge fade-in" key={currentSet.text}>
+                <span>{currentSet.icon}</span>
+                {currentSet.language}
+              </div>
+            )}
             <p className="prompt-text">
               {targetText.split('').map((character, index) => {
                 const typedCharacter = typed[index];
