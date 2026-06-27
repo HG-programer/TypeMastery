@@ -1,25 +1,22 @@
 :root {
   color-scheme: dark;
   font-family: 'Inter', system-ui, sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(82, 190, 255, 0.2), transparent 30%),
-    radial-gradient(circle at top right, rgba(255, 166, 87, 0.16), transparent 24%),
-    linear-gradient(180deg, #07111f 0%, #0d1728 100%);
-  color: #edf4ff;
+  background: #0B0B0C;
+  color: #FAFAFA;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --panel: rgba(10, 17, 31, 0.8);
-  --panel-border: rgba(160, 196, 255, 0.16);
-  --text-soft: #aab8d4;
-  --accent: #71d6ff;
-  --accent-strong: #9cf4ff;
+  --panel: #171717;
+  --panel-border: #2B2B2B;
+  --text-soft: #a1a1aa;
+  --accent: #4F9CF9;
+  --accent-strong: #66AFFF;
   --good: #48e3a4;
   --bad: #ff7b7b;
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 * {
@@ -55,9 +52,9 @@ button {
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.8fr);
-  gap: 20px;
+  gap: 24px;
   align-items: stretch;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
 }
 
 .eyebrow {
@@ -106,9 +103,7 @@ button {
 .ad-slot {
   border: 1px solid var(--panel-border);
   background: var(--panel);
-  backdrop-filter: blur(24px);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
+  border-radius: 12px;
 }
 
 .hero-card {
@@ -137,7 +132,7 @@ button {
 .workspace-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr);
-  gap: 20px;
+  gap: 32px;
 }
 
 .practice-panel {
@@ -179,7 +174,7 @@ button {
 .primary-button,
 .mode-button {
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 12px 18px;
   transition:
     transform 0.2s ease,
@@ -193,9 +188,13 @@ button {
 }
 
 .primary-button {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #07111f;
-  font-weight: 700;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.primary-button:hover {
+  background: var(--accent-strong);
 }
 
 .mode-switcher {
@@ -211,8 +210,8 @@ button {
 }
 
 .mode-button.active {
-  border-color: rgba(156, 244, 255, 0.45);
-  background: rgba(113, 214, 255, 0.14);
+  border-color: var(--accent);
+  background: rgba(79, 156, 249, 0.15);
   color: white;
 }
 
@@ -221,10 +220,10 @@ button {
 }
 
 .typing-card {
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 20px;
-  background: rgba(4, 10, 20, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
 }
 
 .progress-row {
@@ -358,7 +357,7 @@ textarea:focus {
 .seo-summary,
 .guide-grid,
 .faq-section {
-  margin-top: 20px;
+  margin-top: 32px;
 }
 
 .seo-summary {
@@ -404,9 +403,7 @@ textarea:focus {
 .faq-section {
   border: 1px solid var(--panel-border);
   background: var(--panel);
-  backdrop-filter: blur(24px);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
+  border-radius: 12px;
   padding: 24px;
 }
 
@@ -415,10 +412,9 @@ textarea:focus {
   gap: 14px;
   margin-top: 20px;
   padding: 24px;
-  border-radius: 24px;
-  border: 1px solid rgba(113, 214, 255, 0.22);
-  background: linear-gradient(180deg, rgba(14, 23, 40, 0.9), rgba(8, 14, 25, 0.9));
-  box-shadow: var(--shadow);
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
 }
 
 .share-card p {

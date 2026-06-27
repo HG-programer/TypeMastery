@@ -3,14 +3,14 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 type Mode = 'Focus' | 'Speed' | 'Precision' | 'Programmer';
 
 const PROGRAMMER_SNIPPETS = [
-  { language: 'Python', icon: '🐍', text: 'def binary_search(arr, target):' },
-  { language: 'Java', icon: '☕', text: 'for(int i=0; i<n; i++) {' },
-  { language: 'JavaScript', icon: '⚡', text: 'const response = await fetch(url);' },
-  { language: 'Java', icon: '☕', text: 'HashMap<String, Integer> map = new HashMap<>();' },
-  { language: 'SQL', icon: '🗄️', text: 'SELECT * FROM users WHERE status = "active";' },
-  { language: 'JavaScript', icon: '⚡', text: 'const total = items.reduce((a, b) => a + b, 0);' },
-  { language: 'Java', icon: '☕', text: 'public static void main(String[] args) {' },
-  { language: 'JavaScript', icon: '⚡', text: 'document.getElementById("btn").addEventListener("click", () => {' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'def binary_search(arr, target):' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'for(int i=0; i<n; i++) {' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const response = await fetch(url);' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'interface HistoryItem { wpm: number; }' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'SELECT * FROM users WHERE status = "active";' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const total = items.reduce((a, b) => a + b, 0);' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'public static void main(String[] args) {' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'document.getElementById("btn").addEventListener("click", () => {' },
 ];
 
 type PracticeSet = {
@@ -20,6 +20,7 @@ type PracticeSet = {
   text: string;
   language?: string;
   icon?: string;
+  color?: string;
 };
 
 type HistoryItem = {
@@ -171,6 +172,7 @@ function pickPracticeSet(mode: Mode, index: number) {
       text: snippet.text,
       language: snippet.language,
       icon: snippet.icon,
+      color: snippet.color,
     };
   }
   return PRACTICE_SETS[index % PRACTICE_SETS.length];
@@ -446,7 +448,11 @@ export default function App() {
               <span style={{ width: `${progress}%` }} />
             </div>
             {currentSet.language && (
-              <div className="language-badge fade-in" key={currentSet.text}>
+              <div 
+                className="language-badge fade-in" 
+                key={currentSet.text}
+                style={{ color: currentSet.color, borderColor: currentSet.color + '40', background: currentSet.color + '10' }}
+              >
                 <span>{currentSet.icon}</span>
                 {currentSet.language}
               </div>
