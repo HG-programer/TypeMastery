@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /#typing-speed-test
+Allow: /#typing-tips
+Allow: /#faq
+
+# Replace the placeholder domain below with your deployed production URL.
+Sitemap: /sitemap.xml
