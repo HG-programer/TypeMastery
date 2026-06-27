@@ -228,8 +228,6 @@ function SeoSchema() {
   return null;
 }
 
-}
-
 function ShareCard({ score }: { score: number }) {
   const [message, setMessage] = useState('');
 
