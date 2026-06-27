@@ -378,6 +378,7 @@ export default function App() {
     setTyped('');
     setStartedAt(null);
     setFinishedAt(null);
+    textareaRef.current?.focus();
   };
 
   const startProgrammerPractice = () => {
@@ -477,6 +478,7 @@ export default function App() {
               onChange={(event) => onType(event.target.value)}
               placeholder="Start typing here to begin the timer..."
               aria-label="Typing input"
+              autoFocus
             />
             <div className="stat-grid">
               <article>
