@@ -1,6 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 
-type Mode = 'Focus' | 'Speed' | 'Precision';
+type Mode = 'Focus' | 'Speed' | 'Precision' | 'Programmer';
+
+const PROGRAMMER_SNIPPETS = [
+  'def binary_search(arr, target):',
+  'for(int i=0; i<n; i++) {',
+  'const response = await fetch(url);',
+  'HashMap<String, Integer> map = new HashMap<>();',
+  'SELECT * FROM users WHERE status = "active";',
+  'const total = items.reduce((a, b) => a + b, 0);',
+  'public static void main(String[] args) {',
+  'document.getElementById("btn").addEventListener("click", () => {',
+];
 
 type PracticeSet = {
   label: string;
@@ -52,6 +63,7 @@ const MODE_DETAILS: Record<Mode, string> = {
   Focus: 'Balanced pace, error review, and daily consistency.',
   Speed: 'Higher target cadence with shorter reset windows.',
   Precision: 'Punishes misses and rewards clean streaks.',
+  Programmer: 'Complex symbols, camelCase, and syntax muscle memory.',
 };
 
 const FAQ_ITEMS: FaqItem[] = [
@@ -148,6 +160,14 @@ function calculateStats(source: string, typed: string, startedAt: number | null,
 function pickPracticeSet(mode: Mode, index: number) {
   if (mode === 'Speed') return PRACTICE_SETS[1];
   if (mode === 'Precision') return PRACTICE_SETS[2];
+  if (mode === 'Programmer') {
+    return {
+      label: 'Programmer',
+      title: 'Typing practice for programmers',
+      description: 'Practice real syntax from Python, JS, Java, and SQL.',
+      text: PROGRAMMER_SNIPPETS[index % PROGRAMMER_SNIPPETS.length],
+    };
+  }
   return PRACTICE_SETS[index % PRACTICE_SETS.length];
 }
 
@@ -276,6 +296,7 @@ function ShareCard({ score }: { score: number }) {
 }
 
 export default function App() {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [mode, setMode] = useState<Mode>('Focus');
   const [setIndex, setSetIndex] = useState(0);
   const [typed, setTyped] = useState('');
@@ -374,6 +395,18 @@ export default function App() {
     setFinishedAt(null);
   };
 
+  const startProgrammerPractice = () => {
+    setMode('Programmer');
+    setSetIndex(0);
+    setTyped('');
+    setStartedAt(null);
+    setFinishedAt(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 50);
+  };
+
   const onType = (value: string) => {
     if (typed.length === targetText.length) return;
     if (!startedAt) setStartedAt(Date.now());
@@ -388,14 +421,6 @@ export default function App() {
         <div>
           <p className="eyebrow">Typing speed test, touch typing, and beginner practice</p>
           <h1>Train typing with cleaner drills, sharper feedback, and room to monetize later.</h1>
-          <p className="hero-copy">
-            Keyflow is a browser-first typing speed test and practice experience that stores everything locally, works as a free static site, and leaves space for future ads without redesigning the product.
-          </p>
-          <div className="hero-links" aria-label="On-page navigation">
-            <a href="#typing-speed-test">Typing test</a>
-            <a href="#typing-tips">Typing tips</a>
-            <a href="#faq">FAQ</a>
-          </div>
         </div>
 
         <div className="hero-card">
@@ -452,6 +477,7 @@ export default function App() {
               })}
             </p>
             <textarea
+              ref={textareaRef}
               value={typed}
               onChange={(event) => onType(event.target.value)}
               placeholder="Start typing here to begin the timer..."
@@ -544,6 +570,28 @@ export default function App() {
       <ShareCard score={bestScore} />
 
       <SeoSummary />
+
+      <section className="guide-grid" id="programmer-seo" style={{ marginBottom: '60px' }}>
+        <article className="guide-card" style={{ gridColumn: '1 / -1' }}>
+          <p className="eyebrow">Typing Practice for Programmers 💻</p>
+          <h2>Why programmers need typing practice</h2>
+          <p>
+            Programming requires much more than typing ordinary words. Practice typing real Python, Java, JavaScript, SQL and TypeScript syntax instead of random dictionary words. Developers constantly type:
+          </p>
+          <ul style={{ color: 'var(--text-soft)', paddingLeft: '20px', marginBottom: '20px' }}>
+            <li>camelCase</li>
+            <li>snake_case</li>
+            <li>brackets {'{}'}</li>
+            <li>semicolons ;</li>
+            <li>parentheses ()</li>
+            <li>HTML tags &lt;&gt;</li>
+            <li>SQL queries</li>
+          </ul>
+          <button type="button" className="primary-button" onClick={startProgrammerPractice}>
+            Practice Like a Programmer →
+          </button>
+        </article>
+      </section>
 
       <section className="faq-section" id="faq">
         <div className="panel-header faq-header">
