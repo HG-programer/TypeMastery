@@ -434,7 +434,7 @@ export default function App() {
                 className={item === mode ? 'mode-button active' : 'mode-button'}
                 onClick={() => setMode(item)}
               >
-                {item}
+                {item === 'Programmer' ? '</> Programmer' : item}
               </button>
             ))}
           </div>
