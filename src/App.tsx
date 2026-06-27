@@ -414,21 +414,8 @@ export default function App() {
         </div>
       </section>
 
-      <SeoSummary />
-
       <section className="workspace-grid" id="typing-speed-test">
         <div className="practice-panel">
-          <div className="panel-header">
-            <div>
-              <span className="eyebrow">Typing speed test</span>
-              <h2>{currentSet.title}</h2>
-              <p>{currentSet.description}</p>
-            </div>
-            <button type="button" className="ghost-button" onClick={startRound}>
-              Next drill
-            </button>
-          </div>
-
           <div className="mode-switcher" role="tablist" aria-label="Practice modes">
             {(Object.keys(MODE_DETAILS) as Mode[]).map((item) => (
               <button
@@ -441,7 +428,6 @@ export default function App() {
               </button>
             ))}
           </div>
-          <p className="mode-note">{MODE_DETAILS[mode]}</p>
 
           <div className="typing-card">
             <div className="progress-row">
@@ -556,6 +542,8 @@ export default function App() {
       </section>
 
       <ShareCard score={bestScore} />
+
+      <SeoSummary />
 
       <section className="faq-section" id="faq">
         <div className="panel-header faq-header">
