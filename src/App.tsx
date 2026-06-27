@@ -187,10 +187,10 @@ function SeoSchema() {
     const data = {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
-      name: 'Keyflow',
+      name: 'TypeMastery',
       applicationCategory: 'EducationalApplication',
       description:
-        'A static typing speed test and typing practice website with beginner drills, local stats, and ad-ready placements.',
+        'A static typing speed test and typing practice website with beginner drills, local stats, and a distraction-free interface.',
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -228,26 +228,6 @@ function SeoSchema() {
   return null;
 }
 
-function SeoSummary() {
-  return (
-    <section className="seo-summary" id="seo-summary">
-      <div>
-        <p className="eyebrow">SEO foundation</p>
-        <h2>Typing speed test built for search intent and fast answers</h2>
-        <p>
-          If someone searches for a typing speed test, learn touch typing, or typing practice for beginners, this page gives them an instant test, a visible practice system, and helpful guidance without hiding the main task.
-        </p>
-        <p>
-          The site is structured around a clear keyword theme, fast loading, and internal navigation between the typing test, typing tips, and FAQ sections. That helps crawlers understand topical authority while keeping the interactive part of the page easy to find.
-        </p>
-      </div>
-      <ul className="keyword-list" aria-label="Target keywords">
-        {SEO_KEYWORDS.map((keyword) => (
-          <li key={keyword}>{keyword}</li>
-        ))}
-      </ul>
-    </section>
-  );
 }
 
 function ShareCard({ score }: { score: number }) {
@@ -255,12 +235,12 @@ function ShareCard({ score }: { score: number }) {
 
   const shareScore = async () => {
     const shareUrl = SITE_URL || window.location.href;
-    const shareText = `I scored ${score} WPM on Keyflow Typing Test!\nTry it here: ${shareUrl}`;
+    const shareText = `I scored ${score} WPM on TypeMastery!\nTry it here: ${shareUrl}`;
 
     try {
       if (navigator.share) {
         await navigator.share({
-          title: 'Keyflow typing score',
+          title: 'TypeMastery typing score',
           text: shareText,
           url: shareUrl,
         });
@@ -282,7 +262,7 @@ function ShareCard({ score }: { score: number }) {
         <p className="eyebrow">Social proof</p>
         <h2>Share your typing score</h2>
         <p>
-          Public score sharing can turn completed rounds into organic promotion and backlinks from forums, communities, and friend groups.
+          Challenge your friends to beat your high score or prove you are the fastest coder in your group!
         </p>
       </div>
       <button type="button" className="primary-button" onClick={shareScore}>
@@ -420,7 +400,7 @@ export default function App() {
       <section className="hero">
         <div>
           <p className="eyebrow">Typing speed test, touch typing, and beginner practice</p>
-          <h1>Train typing with cleaner drills, sharper feedback, and room to monetize later.</h1>
+          <h1>Master typing with adaptive drills, real-time analytics, and zero distractions.</h1>
         </div>
 
         <div className="hero-card">
@@ -511,13 +491,12 @@ export default function App() {
         </div>
 
         <div className="side-column">
-          <AdSlot label="Top rail ad" />
           <section className="feature-card">
             <p className="eyebrow">Why this is different</p>
             <ul>
-              <li>Local-only sessions with no backend or auth bill.</li>
+              <li>100% private sessions stored locally on your device.</li>
               <li>Adaptive practice sets and mode-based drills instead of one static text stream.</li>
-              <li>Ready for display ads later with reserved placements and simple component boundaries.</li>
+              <li>A dedicated Programmer Mode designed specifically for writing code.</li>
             </ul>
           </section>
           <section className="history-card">
@@ -538,7 +517,6 @@ export default function App() {
               </div>
             )}
           </section>
-          <AdSlot label="Sidebar ad" />
         </div>
       </section>
 
@@ -568,8 +546,6 @@ export default function App() {
       </section>
 
       <ShareCard score={bestScore} />
-
-      <SeoSummary />
 
       <section className="guide-grid" id="programmer-seo" style={{ marginBottom: '60px' }}>
         <article className="guide-card" style={{ gridColumn: '1 / -1' }}>
