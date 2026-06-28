@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 type Mode = 'Focus' | 'Speed' | 'Precision' | 'Programmer';
 
 const PROGRAMMER_SNIPPETS = [
@@ -208,9 +214,18 @@ const GUIDE_ARTICLES: GuideArticle[] = [
 ];
 
 const STORAGE_KEY = 'keyflow-history';
-const SITE_URL = typeof import.meta.env.VITE_SITE_URL === 'string' && import.meta.env.VITE_SITE_URL
-  ? import.meta.env.VITE_SITE_URL
-  : '';
+
+function isSafeUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+const rawUrl = import.meta.env.VITE_SITE_URL;
+const SITE_URL = typeof rawUrl === 'string' && isSafeUrl(rawUrl) ? rawUrl : '';
 
 function loadHistory(): HistoryItem[] {
   if (typeof window === 'undefined') return [];
@@ -455,8 +470,8 @@ export default function App() {
       ].slice(0, 6));
       
       // Tell Google Analytics this was an "engaged" session
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'round_complete', {
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'round_complete', {
           event_category: 'typing',
           event_label: mode,
           value: liveStats.adjustedWpm
