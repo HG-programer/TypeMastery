@@ -368,7 +368,10 @@ function ShareCard({ score }: { score: number }) {
 
 export default function App() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [mode, setMode] = useState<Mode>('Focus');
+  const [mode, setMode] = useState<Mode>(() => {
+    if (typeof window === 'undefined') return 'Focus';
+    return (window.localStorage.getItem('typemastery-mode') as Mode) || 'Focus';
+  });
   const [setIndex, setSetIndex] = useState(0);
   const [typed, setTyped] = useState('');
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -383,6 +386,10 @@ export default function App() {
     (best, item) => Math.max(best, item.wpm),
     0,
   );
+
+  useEffect(() => {
+    window.localStorage.setItem('typemastery-mode', mode);
+  }, [mode]);
 
   useEffect(() => {
     document.title = 'Typing Speed Test | Keyflow';
@@ -468,24 +475,28 @@ export default function App() {
   }, [targetText, typed]);
 
   const startRound = () => {
-    const nextIndex = (setIndex + 1) % PRACTICE_SETS.length;
-    setSetIndex(nextIndex);
+    setSetIndex((prev) => prev + 1);
     setTyped('');
     setStartedAt(null);
     setFinishedAt(null);
     textareaRef.current?.focus();
   };
 
-  const startProgrammerPractice = () => {
-    setMode('Programmer');
-    setSetIndex(0);
+  const handleModeChange = (newMode: Mode) => {
+    if (mode === newMode) return;
+    setMode(newMode);
+    setSetIndex(Math.floor(Math.random() * 1000));
     setTyped('');
     setStartedAt(null);
     setFinishedAt(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     setTimeout(() => {
       textareaRef.current?.focus();
     }, 50);
+  };
+
+  const startProgrammerPractice = () => {
+    handleModeChange('Programmer');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const onType = (value: string) => {
@@ -528,7 +539,7 @@ export default function App() {
                 key={item}
                 type="button"
                 className={item === mode ? 'mode-button active' : 'mode-button'}
-                onClick={() => setMode(item)}
+                onClick={() => handleModeChange(item)}
               >
                 {item === 'Programmer' ? '</> Programmer' : item}
               </button>
