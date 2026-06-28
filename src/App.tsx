@@ -3,14 +3,100 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 type Mode = 'Focus' | 'Speed' | 'Precision' | 'Programmer';
 
 const PROGRAMMER_SNIPPETS = [
+  // Python
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'def binary_search(arr, target):' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'for(int i=0; i<n; i++) {' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const response = await fetch(url);' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'interface HistoryItem { wpm: number; }' },
-  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'SELECT * FROM users WHERE status = "active";' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const total = items.reduce((a, b) => a + b, 0);' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'return [x for x in data if x > 0]' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'class User(db.Model):' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'import pandas as pd' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'if __name__ == "__main__":' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'for index, item in enumerate(items):' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'def __init__(self, name, age):' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'with open("data.txt", "r") as f:' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'try: result = 10 / x' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: 'except ZeroDivisionError as e:' },
+  
+  // Java
   { language: 'Java', icon: '☕', color: '#fb923c', text: 'public static void main(String[] args) {' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'for(int i = 0; i < n; i++) {' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'List<String> list = new ArrayList<>();' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'System.out.println("Hello World");' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'try { Thread.sleep(1000); } catch(Exception e) {}' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'public class Singleton {' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'private static Singleton instance;' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'if (instance == null) {' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'return instance;' },
+  { language: 'Java', icon: '☕', color: '#fb923c', text: 'import java.util.stream.Collectors;' },
+
+  // JavaScript
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const response = await fetch(url);' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const total = items.reduce((a, b) => a + b, 0);' },
   { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'document.getElementById("btn").addEventListener("click", () => {' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'export default function App() {' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'console.log(Object.keys(data));' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'setTimeout(() => resolve(data), 1000);' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const { name, age, ...rest } = user;' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const filtered = array.filter(x => x !== null);' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'window.localStorage.setItem("key", value);' },
+  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'module.exports = { init, destroy };' },
+
+  // TypeScript
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'interface HistoryItem { wpm: number; }' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'const user: Partial<User> = {};' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'type Mode = "Focus" | "Speed" | "Precision";' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'function identity<T>(arg: T): T {' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'export const App: React.FC<Props> = () => {' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'type AppDispatch = typeof store.dispatch;' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'const [state, setState] = useState<string | null>(null);' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'export enum StatusCode { OK = 200, ERROR = 500 }' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'Record<string, number | undefined>' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'declare global { interface Window { gtag: any; } }' },
+
+  // SQL
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'SELECT * FROM users WHERE status = "active";' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'LEFT JOIN orders ON users.id = orders.user_id' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'GROUP BY category_id HAVING count > 10' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'INSERT INTO logs (level, message) VALUES' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'ORDER BY created_at DESC LIMIT 100;' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'CREATE TABLE IF NOT EXISTS products (' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'UPDATE inventory SET stock = stock - 1' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'DELETE FROM sessions WHERE expires_at < NOW();' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'SELECT COUNT(DISTINCT user_id) as total_users' },
+  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'WITH recursive_cte AS (SELECT 1 as n)' },
+
+  // Rust
+  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'fn main() { println!("Hello, world!"); }' },
+  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'let mut counter = 0;' },
+  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'impl Default for User {' },
+  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'match result { Ok(v) => v, Err(e) => panic!() }' },
+  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'pub struct Config { pub port: u16 }' },
+
+  // Go
+  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'func main() {' },
+  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'if err != nil { return err }' },
+  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'go func() { fmt.Println("goroutine") }()' },
+  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'ch := make(chan int, 10)' },
+  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'defer file.Close()' },
+
+  // C++
+  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: '#include <iostream>' },
+  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'std::vector<int> numbers = {1, 2, 3};' },
+  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'for (auto& item : items) {' },
+  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'std::unique_ptr<Node> root;' },
+  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'int main(int argc, char* argv[]) {' },
+
+  // HTML
+  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<!DOCTYPE html>' },
+  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<meta name="viewport" content="width=device-width">' },
+  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<button type="submit" class="btn">' },
+  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<script src="/app.js" defer></script>' },
+  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<link rel="stylesheet" href="style.css">' },
+
+  // CSS
+  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: 'display: flex; justify-content: center;' },
+  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: 'grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));' },
+  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: '@media (max-width: 768px) {' },
+  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: 'transition: all 0.3s ease-in-out;' },
+  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: ':root { --primary-color: #0B0B0C; }' }
 ];
 
 type PracticeSet = {
