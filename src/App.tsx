@@ -133,25 +133,43 @@ type GuideArticle = {
   content: string[];
 };
 
-const PRACTICE_SETS: PracticeSet[] = [
-  {
-    label: 'Warm-up',
-    title: 'Rhythm ladder',
-    description: 'Short words that build finger flow without extra noise.',
-    text: 'time mile clear group winter shift create rhythm simple speed typing focus',
-  },
-  {
-    label: 'Productive',
-    title: 'Work sentences',
-    description: 'Longer real-world phrases with punctuation and spacing.',
-    text: 'The dashboard should feel fast, readable, and confident even when the user is moving quickly.',
-  },
-  {
-    label: 'Challenge',
-    title: 'Precision burst',
-    description: 'A denser drill for accuracy under pressure.',
-    text: 'precision matters when your hands already know the pattern but your mind wants to rush ahead',
-  },
+const FOCUS_SETS = [
+  'time mile clear group winter shift create rhythm simple speed typing focus',
+  'water world plant stand light under cross round story point north start',
+  'where white sound place every large animal state great small night often',
+  'leave paper space story never reach earth above carry watch miles young',
+  'plant earth cover state begin never under while point might story often',
+  'group always those carry right clear watch water plant story under white',
+  'every north state never white reach small above leave where earth miles',
+  'sound large stand light point those young right often never animal round',
+  'cross where always group white rhythm water shift typing speed simple time',
+  'focus typing clear simple rhythm time speed shift water group always clear'
+];
+
+const SPEED_SETS = [
+  'The quick brown fox jumps over the lazy dog as it runs across the field.',
+  'If you can keep your head when all about you are losing theirs and blaming it on you.',
+  'Design is not just what it looks like and feels like. Design is how it works.',
+  'The dashboard should feel fast, readable, and confident even when the user is moving quickly.',
+  'Good writers borrow, great writers steal. But the best typists just practice every day.',
+  'In the middle of difficulty lies opportunity, especially if you learn to type without looking.',
+  'Simplicity is the ultimate sophistication when it comes to user interfaces and fast web apps.',
+  'Typing quickly is less about rushing your fingers and more about trusting your muscle memory.',
+  'The only way to do great work is to love what you do, and type it out at light speed.',
+  'Success is not final, failure is not fatal: it is the courage to continue that counts.'
+];
+
+const PRECISION_SETS = [
+  'User_ID: 9812-X (active); status="confirmed", balance=$4,291.50!',
+  '[{ "name": "Admin", "id": 42 }, { "name": "Guest", "id": 7 }]',
+  'const URL = "https://api.example.com/v1/users?limit=50&sort=desc";',
+  'SELECT id, email, created_at FROM users WHERE id IN (10, 20, 30);',
+  'If x = 10 and y = -5.5, then (x + y) * 2 = 9.0 (approx.)',
+  'Date format: YYYY-MM-DD (e.g., 2026-10-31), Time: 14:30:00 UTC.',
+  '<button class="btn-primary" onClick={handleEvent}>Submit</button>',
+  'Email support at: help@domain.com or call 1-800-555-0199.',
+  'The regex /^[a-zA-Z0-9]+$/ matches alphanumeric characters only.',
+  '#Header 1 \\n ##Header 2 \\n [Link Text](https://link.com/)'
 ];
 
 const MODE_DETAILS: Record<Mode, string> = {
@@ -262,13 +280,11 @@ function calculateStats(source: string, typed: string, startedAt: number | null,
 }
 
 function pickPracticeSet(mode: Mode, index: number) {
-  if (mode === 'Speed') return PRACTICE_SETS[1];
-  if (mode === 'Precision') return PRACTICE_SETS[2];
   if (mode === 'Programmer') {
     const snippet = PROGRAMMER_SNIPPETS[index % PROGRAMMER_SNIPPETS.length];
     return {
       label: 'Programmer',
-      title: 'Typing practice for programmers',
+      title: 'Syntax & Code',
       description: 'Practice real syntax from Python, JS, Java, and SQL.',
       text: snippet.text,
       language: snippet.language,
@@ -276,7 +292,32 @@ function pickPracticeSet(mode: Mode, index: number) {
       color: snippet.color,
     };
   }
-  return PRACTICE_SETS[index % PRACTICE_SETS.length];
+  
+  if (mode === 'Speed') {
+    return {
+      label: 'Speed',
+      title: 'Conversational Flow',
+      description: 'Longer real-world phrases to push your maximum WPM.',
+      text: SPEED_SETS[index % SPEED_SETS.length],
+    };
+  }
+
+  if (mode === 'Precision') {
+    return {
+      label: 'Precision',
+      title: 'Complex Text',
+      description: 'A denser drill for accuracy with punctuation and numbers.',
+      text: PRECISION_SETS[index % PRECISION_SETS.length],
+    };
+  }
+
+  // Focus
+  return {
+    label: 'Focus',
+    title: 'Rhythm ladder',
+    description: 'Short words that build finger flow without extra noise.',
+    text: FOCUS_SETS[index % FOCUS_SETS.length],
+  };
 }
 
 function AdSlot({ label }: { label: string }) {
