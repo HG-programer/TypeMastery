@@ -360,6 +360,15 @@ export default function App() {
         },
         ...prev,
       ].slice(0, 6));
+      
+      // Tell Google Analytics this was an "engaged" session
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'round_complete', {
+          event_category: 'typing',
+          event_label: mode,
+          value: liveStats.adjustedWpm
+        });
+      }
     }
   }, [finishedAt, isComplete, liveStats.adjustedWpm, liveStats.accuracy, mode, startedAt]);
 
