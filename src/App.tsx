@@ -381,7 +381,8 @@ function ShareCard({ score, mode, language }: { score: number; mode: Mode; langu
 
   const shareScore = async () => {
     const shareUrl = SITE_URL || window.location.href;
-    const shareText = `I scored ${score} WPM on TypeMastery!\nTry it here: ${shareUrl}`;
+    const subtitle = language ? `${mode} Mode - ${language}` : `${mode} Mode`;
+    const shareText = `I scored ${score} WPM on TypeMastery (${subtitle})!\nTry it here: ${shareUrl}`;
 
     try {
       if (navigator.share) {
@@ -420,9 +421,9 @@ function ShareCard({ score, mode, language }: { score: number; mode: Mode; langu
 </svg>
     `.trim();
 
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
+    const url = \`data:image/svg+xml;charset=utf-8,\${encodeURIComponent(svgString)}\`;
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.onload = () => {
       const canvas = document.createElement('canvas');
       canvas.width = 1200;
@@ -430,16 +431,23 @@ function ShareCard({ score, mode, language }: { score: number; mode: Mode; langu
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(img, 0, 0);
-        const pngUrl = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.download = 'typemastery-score.png';
-        a.href = pngUrl;
-        a.click();
+        try {
+          const pngUrl = canvas.toDataURL('image/png');
+          const a = document.createElement('a');
+          a.download = 'typemastery-score.png';
+          a.href = pngUrl;
+          a.click();
+          setMessage('Image generated and downloaded!');
+        } catch (e) {
+          console.error(e);
+          setMessage('Failed to generate image (Canvas error).');
+        }
       }
-      URL.revokeObjectURL(url);
+    };
+    img.onerror = () => {
+      setMessage('Failed to load score image template.');
     };
     img.src = url;
-    setMessage('Image generated and downloaded!');
   };
 
   return (
