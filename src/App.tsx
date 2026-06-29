@@ -605,7 +605,7 @@ export default function App() {
   };
 
   const startProgrammerPractice = () => {
-    handleModeChange('Programmer');
+    handleModeChange('Python');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -856,7 +856,7 @@ export default function App() {
             <li>SQL queries</li>
           </ul>
           <button type="button" className="primary-button" onClick={startProgrammerPractice}>
-            Practice Like a Programmer →
+            Practice Like a Python Dev →
           </button>
         </article>
       </section>
