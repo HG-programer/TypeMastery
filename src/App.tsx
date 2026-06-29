@@ -356,7 +356,7 @@ function SeoSchema() {
   return null;
 }
 
-function ShareCard({ score, mode, language }: { score: number; mode: Mode; language?: string }) {
+function ShareCard({ score, mode, language, accentColor }: { score: number; mode: Mode; language?: string; accentColor?: string }) {
   const [message, setMessage] = useState('');
 
   const shareScore = async () => {
@@ -385,19 +385,86 @@ function ShareCard({ score, mode, language }: { score: number; mode: Mode; langu
 
   const downloadScoreImage = () => {
     const subtitle = language ? `${mode} Mode - ${language}` : `${mode} Mode`;
+    const cardAccent = accentColor || '#4f9cf9';
     const svgString = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-  <rect width="100%" height="100%" fill="#0B0B0C"/>
-  <rect width="100%" height="100%" fill="none" stroke="#4f9cf9" stroke-width="20"/>
-  <text x="50%" y="30%" font-family="sans-serif" font-size="40" fill="#a1a1aa" text-anchor="middle" font-weight="bold">
-    TypeMastery Speed Test
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="50%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#06080d"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${cardAccent}"/>
+      <stop offset="100%" stop-color="#66AFFF"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${cardAccent}" stop-opacity="0"/>
+      <stop offset="50%" stop-color="${cardAccent}" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="${cardAccent}" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="orb1" cx="0.2" cy="0.3" r="0.5">
+      <stop offset="0%" stop-color="${cardAccent}" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="${cardAccent}" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orb2" cx="0.85" cy="0.75" r="0.4">
+      <stop offset="0%" stop-color="#66AFFF" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#66AFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+
+  <!-- Ambient orbs -->
+  <rect width="100%" height="100%" fill="url(#orb1)"/>
+  <rect width="100%" height="100%" fill="url(#orb2)"/>
+
+  <!-- Grid dots -->
+  ${Array.from({ length: 12 }, (_, r) => Array.from({ length: 24 }, (_, c) => `<circle cx="${60 + c * 48}" cy="${35 + r * 52}" r="1" fill="white" opacity="0.04"/>`).join('')).join('')}
+
+  <!-- Top accent line -->
+  <rect x="0" y="0" width="1200" height="3" fill="url(#accent)"/>
+
+  <!-- Decorative corner brackets -->
+  <path d="M40 50 L40 30 L60 30" stroke="${cardAccent}" stroke-width="2" fill="none" opacity="0.3"/>
+  <path d="M1160 50 L1160 30 L1140 30" stroke="${cardAccent}" stroke-width="2" fill="none" opacity="0.3"/>
+  <path d="M40 580 L40 600 L60 600" stroke="${cardAccent}" stroke-width="2" fill="none" opacity="0.3"/>
+  <path d="M1160 580 L1160 600 L1140 600" stroke="${cardAccent}" stroke-width="2" fill="none" opacity="0.3"/>
+
+  <!-- Divider line -->
+  <rect x="100" y="420" width="1000" height="1" fill="url(#bar)"/>
+
+  <!-- Logo / Brand -->
+  <text x="600" y="140" font-family="sans-serif" font-size="18" fill="#52525b" text-anchor="middle" letter-spacing="6" font-weight="600">
+    TYPEMASTERY.ME
   </text>
-  <text x="50%" y="55%" font-family="monospace" font-size="120" fill="#4f9cf9" text-anchor="middle" font-weight="bold">
-    ${score} WPM
+
+  <!-- Score (with glow) -->
+  <text x="600" y="310" font-family="monospace" font-size="140" fill="url(#accent)" text-anchor="middle" font-weight="bold" filter="url(#glow)">
+    ${score}
   </text>
-  <text x="50%" y="75%" font-family="sans-serif" font-size="45" fill="#ffffff" text-anchor="middle">
+  <text x="600" y="370" font-family="sans-serif" font-size="32" fill="#71717a" text-anchor="middle" letter-spacing="8" font-weight="600">
+    WORDS PER MINUTE
+  </text>
+
+  <!-- Mode subtitle -->
+  <text x="600" y="480" font-family="sans-serif" font-size="28" fill="#a1a1aa" text-anchor="middle">
     ${subtitle}
   </text>
+
+  <!-- Bottom tagline -->
+  <text x="600" y="560" font-family="sans-serif" font-size="16" fill="#3f3f46" text-anchor="middle" letter-spacing="2">
+    typemastery.me — typing practice for programmers
+  </text>
+
+  <!-- Small decorative hexagons -->
+  <polygon points="90,520 100,515 110,520 110,530 100,535 90,530" fill="none" stroke="${cardAccent}" stroke-width="1" opacity="0.15"/>
+  <polygon points="1090,100 1100,95 1110,100 1110,110 1100,115 1090,110" fill="none" stroke="${cardAccent}" stroke-width="1" opacity="0.15"/>
 </svg>
     `.trim();
 
@@ -825,7 +892,7 @@ export default function App() {
         ))}
       </section>
 
-      <ShareCard score={bestScore} mode={mode} language={currentSet.language} />
+      <ShareCard score={bestScore} mode={mode} language={currentSet.language} accentColor={currentSet.color} />
 
       <section className="guide-grid" id="programmer-seo" style={{ marginBottom: '60px' }}>
         <article className="guide-card" style={{ gridColumn: '1 / -1' }}>
