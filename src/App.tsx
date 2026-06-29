@@ -45,16 +45,6 @@ const DATA_SNIPPETS = [
   { language: 'Pandas', icon: '🐼', color: '#150458', text: 'df["date"] = pd.to_datetime(df["date"])' }
 ];
 
-type PracticeSet = {
-  label: string;
-  title: string;
-  description: string;
-  text: string;
-  language?: string;
-  icon?: string;
-  color?: string;
-};
-
 type HistoryItem = {
   wpm: number;
   accuracy: number;
@@ -319,16 +309,6 @@ function pickPracticeSet(mode: Mode, index: number, customText?: string) {
   };
 }
 
-function AdSlot({ label }: { label: string }) {
-  return (
-    <aside className="ad-slot" aria-label={label}>
-      <span className="ad-kicker">Ad-ready slot</span>
-      <strong>{label}</strong>
-      <p>Reserved for future display or affiliate ads without changing the app architecture.</p>
-    </aside>
-  );
-}
-
 function SeoSchema() {
   useEffect(() => {
     const existing = document.getElementById('keyflow-schema');
@@ -421,7 +401,7 @@ function ShareCard({ score, mode, language }: { score: number; mode: Mode; langu
 </svg>
     `.trim();
 
-    const url = \`data:image/svg+xml;charset=utf-8,\${encodeURIComponent(svgString)}\`;
+    const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
