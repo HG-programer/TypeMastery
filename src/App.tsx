@@ -6,103 +6,43 @@ declare global {
   }
 }
 
-type Mode = 'Focus' | 'Speed' | 'Precision' | 'Programmer';
+type Mode = 'Focus' | 'Speed' | 'Precision' | 'Python' | 'Web Dev' | 'Data' | 'Custom';
 
-const PROGRAMMER_SNIPPETS = [
-  // Python
+const PYTHON_SNIPPETS = [
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'def binary_search(arr, target):' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'return [x for x in data if x > 0]' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'class User(db.Model):' },
-  { language: 'Python', icon: '🐍', color: '#86efac', text: 'import pandas as pd' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'if __name__ == "__main__":' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'for index, item in enumerate(items):' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'def __init__(self, name, age):' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'with open("data.txt", "r") as f:' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'try: result = 10 / x' },
   { language: 'Python', icon: '🐍', color: '#86efac', text: 'except ZeroDivisionError as e:' },
-  
-  // Java
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'public static void main(String[] args) {' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'for(int i = 0; i < n; i++) {' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'List<String> list = new ArrayList<>();' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'System.out.println("Hello World");' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'try { Thread.sleep(1000); } catch(Exception e) {}' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'public class Singleton {' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'private static Singleton instance;' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'if (instance == null) {' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'return instance;' },
-  { language: 'Java', icon: '☕', color: '#fb923c', text: 'import java.util.stream.Collectors;' },
+  { language: 'Python', icon: '🐍', color: '#86efac', text: '@app.route("/api/users", methods=["GET"])' }
+];
 
-  // JavaScript
+const WEB_DEV_SNIPPETS = [
+  { language: 'React', icon: '⚛️', color: '#61dafb', text: 'const [state, setState] = useState(null);' },
+  { language: 'React', icon: '⚛️', color: '#61dafb', text: 'useEffect(() => { fetchData(); }, []);' },
+  { language: 'React', icon: '⚛️', color: '#61dafb', text: 'export default function App() {' },
   { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const response = await fetch(url);' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const total = items.reduce((a, b) => a + b, 0);' },
   { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'document.getElementById("btn").addEventListener("click", () => {' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'export default function App() {' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'console.log(Object.keys(data));' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'setTimeout(() => resolve(data), 1000);' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const { name, age, ...rest } = user;' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'const filtered = array.filter(x => x !== null);' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'window.localStorage.setItem("key", value);' },
-  { language: 'JavaScript', icon: '⚡', color: '#fde047', text: 'module.exports = { init, destroy };' },
+  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'interface UserProps { name: string; }' },
+  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<button type="submit" class="btn">' },
+  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: 'display: flex; justify-content: center;' },
+  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: '@media (max-width: 768px) {' }
+];
 
-  // TypeScript
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'interface HistoryItem { wpm: number; }' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'const user: Partial<User> = {};' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'type Mode = "Focus" | "Speed" | "Precision";' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'function identity<T>(arg: T): T {' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'export const App: React.FC<Props> = () => {' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'type AppDispatch = typeof store.dispatch;' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'const [state, setState] = useState<string | null>(null);' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'export enum StatusCode { OK = 200, ERROR = 500 }' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'Record<string, number | undefined>' },
-  { language: 'TypeScript', icon: '🔷', color: '#60a5fa', text: 'declare global { interface Window { gtag: any; } }' },
-
-  // SQL
+const DATA_SNIPPETS = [
   { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'SELECT * FROM users WHERE status = "active";' },
   { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'LEFT JOIN orders ON users.id = orders.user_id' },
   { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'GROUP BY category_id HAVING count > 10' },
   { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'INSERT INTO logs (level, message) VALUES' },
-  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'ORDER BY created_at DESC LIMIT 100;' },
-  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'CREATE TABLE IF NOT EXISTS products (' },
-  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'UPDATE inventory SET stock = stock - 1' },
-  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'DELETE FROM sessions WHERE expires_at < NOW();' },
-  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'SELECT COUNT(DISTINCT user_id) as total_users' },
-  { language: 'SQL', icon: '🗄️', color: '#9ca3af', text: 'WITH recursive_cte AS (SELECT 1 as n)' },
-
-  // Rust
-  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'fn main() { println!("Hello, world!"); }' },
-  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'let mut counter = 0;' },
-  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'impl Default for User {' },
-  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'match result { Ok(v) => v, Err(e) => panic!() }' },
-  { language: 'Rust', icon: '🦀', color: '#fca5a5', text: 'pub struct Config { pub port: u16 }' },
-
-  // Go
-  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'func main() {' },
-  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'if err != nil { return err }' },
-  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'go func() { fmt.Println("goroutine") }()' },
-  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'ch := make(chan int, 10)' },
-  { language: 'Go', icon: '🐹', color: '#67e8f9', text: 'defer file.Close()' },
-
-  // C++
-  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: '#include <iostream>' },
-  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'std::vector<int> numbers = {1, 2, 3};' },
-  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'for (auto& item : items) {' },
-  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'std::unique_ptr<Node> root;' },
-  { language: 'C++', icon: '⚙️', color: '#d8b4fe', text: 'int main(int argc, char* argv[]) {' },
-
-  // HTML
-  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<!DOCTYPE html>' },
-  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<meta name="viewport" content="width=device-width">' },
-  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<button type="submit" class="btn">' },
-  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<script src="/app.js" defer></script>' },
-  { language: 'HTML', icon: '🌐', color: '#fdba74', text: '<link rel="stylesheet" href="style.css">' },
-
-  // CSS
-  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: 'display: flex; justify-content: center;' },
-  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: 'grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));' },
-  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: '@media (max-width: 768px) {' },
-  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: 'transition: all 0.3s ease-in-out;' },
-  { language: 'CSS', icon: '🎨', color: '#93c5fd', text: ':root { --primary-color: #0B0B0C; }' }
+  { language: 'Pandas', icon: '🐼', color: '#150458', text: 'import pandas as pd' },
+  { language: 'Pandas', icon: '🐼', color: '#150458', text: 'df = pd.read_csv("dataset.csv")' },
+  { language: 'Pandas', icon: '🐼', color: '#150458', text: 'df.groupby("category")["sales"].sum()' },
+  { language: 'Pandas', icon: '🐼', color: '#150458', text: 'df.dropna(subset=["price"], inplace=True)' },
+  { language: 'Pandas', icon: '🐼', color: '#150458', text: 'df["date"] = pd.to_datetime(df["date"])' }
 ];
 
 type PracticeSet = {
@@ -176,7 +116,10 @@ const MODE_DETAILS: Record<Mode, string> = {
   Focus: 'Balanced pace, error review, and daily consistency.',
   Speed: 'Higher target cadence with shorter reset windows.',
   Precision: 'Punishes misses and rewards clean streaks.',
-  Programmer: 'Complex symbols, camelCase, and syntax muscle memory.',
+  Python: 'Practice pure Python syntax, loops, and logic.',
+  'Web Dev': 'React hooks, HTML, CSS, and JavaScript basics.',
+  Data: 'SQL queries, Pandas, and data processing syntax.',
+  Custom: 'Paste your own code or text to practice on.',
 };
 
 const FAQ_ITEMS: FaqItem[] = [
@@ -262,6 +205,27 @@ function formatDate(date: Date): string {
   }).format(date);
 }
 
+let audioCtx: AudioContext | null = null;
+function playKeystroke() {
+  if (typeof window === 'undefined') return;
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  const osc = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.02);
+  osc.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.02);
+}
+
 function calculateStats(source: string, typed: string, startedAt: number | null, finishedAt: number | null) {
   const effectiveLength = typed.length || 1;
   let matches = 0;
@@ -279,13 +243,48 @@ function calculateStats(source: string, typed: string, startedAt: number | null,
   return { grossWpm, accuracy, adjustedWpm };
 }
 
-function pickPracticeSet(mode: Mode, index: number) {
-  if (mode === 'Programmer') {
-    const snippet = PROGRAMMER_SNIPPETS[index % PROGRAMMER_SNIPPETS.length];
+function pickPracticeSet(mode: Mode, index: number, customText?: string) {
+  if (mode === 'Custom') {
     return {
-      label: 'Programmer',
-      title: 'Syntax & Code',
-      description: 'Practice real syntax from Python, JS, Java, and SQL.',
+      label: 'Custom',
+      title: 'Type Your Own Code',
+      description: 'Practice on your own snippet or code block.',
+      text: customText || 'Please paste your code below to begin.',
+    };
+  }
+
+  if (mode === 'Python') {
+    const snippet = PYTHON_SNIPPETS[index % PYTHON_SNIPPETS.length];
+    return {
+      label: 'Python',
+      title: 'Python Master',
+      description: 'Practice pure Python syntax, loops, and logic.',
+      text: snippet.text,
+      language: snippet.language,
+      icon: snippet.icon,
+      color: snippet.color,
+    };
+  }
+
+  if (mode === 'Web Dev') {
+    const snippet = WEB_DEV_SNIPPETS[index % WEB_DEV_SNIPPETS.length];
+    return {
+      label: 'Web Dev',
+      title: 'React / Web Dev',
+      description: 'React hooks, HTML, CSS, and JavaScript basics.',
+      text: snippet.text,
+      language: snippet.language,
+      icon: snippet.icon,
+      color: snippet.color,
+    };
+  }
+
+  if (mode === 'Data') {
+    const snippet = DATA_SNIPPETS[index % DATA_SNIPPETS.length];
+    return {
+      label: 'Data',
+      title: 'Data Engineer',
+      description: 'SQL queries, Pandas, and data processing syntax.',
       text: snippet.text,
       language: snippet.language,
       icon: snippet.icon,
@@ -377,7 +376,7 @@ function SeoSchema() {
   return null;
 }
 
-function ShareCard({ score }: { score: number }) {
+function ShareCard({ score, mode, language }: { score: number; mode: Mode; language?: string }) {
   const [message, setMessage] = useState('');
 
   const shareScore = async () => {
@@ -403,6 +402,46 @@ function ShareCard({ score }: { score: number }) {
     }
   };
 
+  const downloadScoreImage = () => {
+    const subtitle = language ? `${mode} Mode - ${language}` : `${mode} Mode`;
+    const svgString = `
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <rect width="100%" height="100%" fill="#0B0B0C"/>
+  <rect width="100%" height="100%" fill="none" stroke="#4f9cf9" stroke-width="20"/>
+  <text x="50%" y="30%" font-family="sans-serif" font-size="40" fill="#a1a1aa" text-anchor="middle" font-weight="bold">
+    TypeMastery Speed Test
+  </text>
+  <text x="50%" y="55%" font-family="monospace" font-size="120" fill="#4f9cf9" text-anchor="middle" font-weight="bold">
+    ${score} WPM
+  </text>
+  <text x="50%" y="75%" font-family="sans-serif" font-size="45" fill="#ffffff" text-anchor="middle">
+    ${subtitle}
+  </text>
+</svg>
+    `.trim();
+
+    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1200;
+      canvas.height = 630;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+        const pngUrl = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.download = 'typemastery-score.png';
+        a.href = pngUrl;
+        a.click();
+      }
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+    setMessage('Image generated and downloaded!');
+  };
+
   return (
     <section className="share-card">
       <div>
@@ -412,9 +451,14 @@ function ShareCard({ score }: { score: number }) {
           Challenge your friends to beat your high score or prove you are the fastest coder in your group!
         </p>
       </div>
-      <button type="button" className="primary-button" onClick={shareScore}>
-        Share score
-      </button>
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <button type="button" className="primary-button" onClick={shareScore}>
+          Copy link
+        </button>
+        <button type="button" className="ghost-button" onClick={downloadScoreImage} style={{ border: '1px solid var(--panel-border)' }}>
+          Download Image 🖼️
+        </button>
+      </div>
       <span className="status-text" aria-live="polite">
         {message || 'Encourage users to post their best run.'}
       </span>
@@ -433,8 +477,14 @@ export default function App() {
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [finishedAt, setFinishedAt] = useState<number | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>(() => loadHistory());
+  const [customText, setCustomText] = useState('');
+  const [customInput, setCustomInput] = useState('');
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.localStorage.getItem('typemastery-sound') === 'true';
+  });
 
-  const currentSet = useMemo(() => pickPracticeSet(mode, setIndex), [mode, setIndex]);
+  const currentSet = useMemo(() => pickPracticeSet(mode, setIndex, customText), [mode, setIndex, customText]);
   const targetText = currentSet.text;
   const isComplete = typed.length === targetText.length;
   const liveStats = calculateStats(targetText, typed, startedAt, finishedAt);
@@ -446,6 +496,10 @@ export default function App() {
   useEffect(() => {
     window.localStorage.setItem('typemastery-mode', mode);
   }, [mode]);
+
+  useEffect(() => {
+    window.localStorage.setItem('typemastery-sound', String(soundEnabled));
+  }, [soundEnabled]);
 
   useEffect(() => {
     document.title = 'Typing Speed Test | Keyflow';
@@ -556,6 +610,9 @@ export default function App() {
   };
 
   const onType = (value: string) => {
+    if (soundEnabled && value !== typed) {
+      playKeystroke();
+    }
     if (typed.length === targetText.length) return;
     if (!startedAt) setStartedAt(Date.now());
     setTyped(value.slice(0, targetText.length));
@@ -589,24 +646,65 @@ export default function App() {
 
       <section className="workspace-grid" id="typing-speed-test">
         <div className="practice-panel">
-          <div className="mode-switcher" role="tablist" aria-label="Practice modes">
-            {(Object.keys(MODE_DETAILS) as Mode[]).map((item) => (
-              <button
-                key={item}
-                type="button"
-                className={item === mode ? 'mode-button active' : 'mode-button'}
-                onClick={() => handleModeChange(item)}
-              >
-                {item === 'Programmer' ? '</> Programmer' : item}
-              </button>
-            ))}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <div className="mode-switcher" role="tablist" aria-label="Practice modes" style={{ margin: 0 }}>
+              {(Object.keys(MODE_DETAILS) as Mode[]).map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  className={item === mode ? 'mode-button active' : 'mode-button'}
+                  onClick={() => handleModeChange(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+            <button 
+              className="mode-button" 
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              title={soundEnabled ? "Disable mechanical keyboard sound" : "Enable mechanical keyboard sound"}
+              style={{ margin: 0, padding: '10px 14px', fontSize: '1.2rem', borderColor: soundEnabled ? 'var(--accent)' : 'transparent', background: soundEnabled ? 'rgba(79, 156, 249, 0.1)' : 'rgba(255, 255, 255, 0.04)' }}
+            >
+              {soundEnabled ? '🔊' : '🔈'}
+            </button>
           </div>
 
           <div className="typing-card fade-in" key={mode}>
-            <div className="progress-row">
-              <span>{Math.round(progress)}% complete</span>
-              <span>{mistakes} errors</span>
-            </div>
+            {mode === 'Custom' && !customText ? (
+              <div className="custom-input-area fade-in">
+                <p style={{ margin: '0 0 12px 0', color: 'var(--text-soft)' }}>
+                  Paste the code, text, or query you want to practice below.
+                </p>
+                <textarea 
+                  className="custom-textarea"
+                  placeholder="e.g. const URL = 'https://api.example.com';"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  autoFocus
+                />
+                <button 
+                  className="primary-button" 
+                  onClick={() => {
+                    if (customInput.trim()) {
+                      setCustomText(customInput.trim());
+                      setSetIndex(0);
+                      setTyped('');
+                      setStartedAt(null);
+                      setFinishedAt(null);
+                      setTimeout(() => textareaRef.current?.focus(), 50);
+                    }
+                  }}
+                  style={{ marginTop: '16px', width: '100%', display: 'block', textAlign: 'center' }}
+                >
+                  Start Custom Drill
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="progress-row">
+                  <span>{Math.round(progress)}% complete</span>
+                  <span>{mistakes} errors</span>
+                </div>
             <div className="progress-bar" aria-hidden="true">
               <span style={{ width: `${progress}%` }} />
             </div>
@@ -664,8 +762,23 @@ export default function App() {
               <button type="button" className="primary-button" onClick={startRound}>
                 Reset round
               </button>
+              {mode === 'Custom' && (
+                <button 
+                  type="button" 
+                  className="ghost-button" 
+                  onClick={() => {
+                    setCustomText('');
+                    setCustomInput('');
+                  }}
+                  style={{ marginLeft: '12px' }}
+                >
+                  Change snippet
+                </button>
+              )}
               <span className="status-text">{isComplete ? 'Round complete' : 'Keep typing'}</span>
             </div>
+          </>
+          )}
           </div>
         </div>
 
@@ -724,7 +837,7 @@ export default function App() {
         ))}
       </section>
 
-      <ShareCard score={bestScore} />
+      <ShareCard score={bestScore} mode={mode} language={currentSet.language} />
 
       <section className="guide-grid" id="programmer-seo" style={{ marginBottom: '60px' }}>
         <article className="guide-card" style={{ gridColumn: '1 / -1' }}>
