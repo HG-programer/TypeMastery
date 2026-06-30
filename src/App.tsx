@@ -163,7 +163,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'Is this typing speed test free?',
     answer:
-      'Yes. Keyflow is a static client-only app, so it can be hosted free without server costs or backend infrastructure. That matters if you want a typing practice website that can scale with traffic instead of with server bills. A static host such as GitHub Pages, Cloudflare Pages, or Netlify can serve the page quickly, and the browser handles the typing test locally. That keeps the site simple to maintain, improves crawlability, and makes it easier to focus on search intent: users land on the page and start typing immediately instead of waiting for an app shell or login flow.',
+      'Yes. TypeMastery is a static client-only app, so it can be hosted free without server costs or backend infrastructure. That matters if you want a typing practice website that can scale with traffic instead of with server bills. A static host such as GitHub Pages, Cloudflare Pages, or Netlify can serve the page quickly, and the browser handles the typing test locally. That keeps the site simple to maintain, improves crawlability, and makes it easier to focus on search intent: users land on the page and start typing immediately instead of waiting for an app shell or login flow.',
   },
   {
     question: 'How is this different from Keybr?',
@@ -559,44 +559,57 @@ function AchievementsPanel({ unlockedIds }: { unlockedIds: string[] }) {
 function SeoSchema() {
   useEffect(() => {
     const existing = document.getElementById('keyflow-schema');
-    const data = {
+    
+    const appSchema = {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
       name: 'TypeMastery',
+      url: SITE_URL || 'https://www.typemastery.me/',
       applicationCategory: 'EducationalApplication',
+      operatingSystem: 'All',
+      browserRequirements: 'Requires HTML5. Requires JavaScript.',
       description:
-        'A static typing speed test and typing practice website with beginner drills, local stats, and a distraction-free interface.',
+        'TypeMastery is a free, interactive online typing speed test and typing practice website with touch-typing drills, local analytics, and developer code exercises.',
       offers: {
         '@type': 'Offer',
-        price: '0',
+        price: '0.00',
         priceCurrency: 'USD',
       },
-      keyword: SEO_KEYWORDS.join(', '),
+      keywords: SEO_KEYWORDS.join(', '),
       featureList: [
-        'Typing speed test',
-        'Typing practice for beginners',
-        'Touch typing practice',
-        'Local session history',
+        'Interactive typing speed test',
+        'Touch typing practice for beginners',
+        'Dedicated Programmer Mode for Python, React/JavaScript, and SQL/Pandas code drills',
+        'Mechanical keyboard audio feedback simulation',
+        'XP level achievements, streaks, and gamification badge rewards',
+        '100% private session stats stored locally in the browser',
       ],
-      faq: FAQ_ITEMS.map((item) => ({
+    };
+
+    const faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: FAQ_ITEMS.map((item) => ({
         '@type': 'Question',
         name: item.question,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: item.answer,
+          text: item.answer.replace(/Keyflow/g, 'TypeMastery'),
         },
       })),
     };
 
+    const schemaData = [appSchema, faqSchema];
+
     if (existing) {
-      existing.textContent = JSON.stringify(data);
+      existing.textContent = JSON.stringify(schemaData);
       return;
     }
 
     const script = document.createElement('script');
     script.id = 'keyflow-schema';
     script.type = 'application/ld+json';
-    script.textContent = JSON.stringify(data);
+    script.textContent = JSON.stringify(schemaData);
     document.head.appendChild(script);
   }, []);
 
@@ -831,13 +844,13 @@ export default function App() {
   }, [modeCounts]);
 
   useEffect(() => {
-    document.title = 'Typing Speed Test | Keyflow';
+    document.title = 'Typing Speed Test | TypeMastery';
 
     const description = document.querySelector('meta[name="description"]');
     if (description) {
       description.setAttribute(
         'content',
-        'Keyflow is a free typing speed test and typing practice website for beginners with touch typing drills, local stats, and ad-ready layouts.',
+        'TypeMastery is a free typing speed test and typing practice website for beginners with touch typing drills, local stats, and ad-ready layouts.',
       );
     }
 
@@ -860,7 +873,7 @@ export default function App() {
       tag.setAttribute('content', content);
     };
 
-    upsertMeta('property', 'og:title', 'Typing Speed Test | Keyflow');
+    upsertMeta('property', 'og:title', 'Typing Speed Test | TypeMastery');
     upsertMeta(
       'property',
       'og:description',
@@ -868,7 +881,7 @@ export default function App() {
     );
     upsertMeta('property', 'og:type', 'website');
     upsertMeta('name', 'twitter:card', 'summary_large_image');
-    upsertMeta('name', 'twitter:title', 'Typing Speed Test | Keyflow');
+    upsertMeta('name', 'twitter:title', 'Typing Speed Test | TypeMastery');
     upsertMeta(
       'name',
       'twitter:description',

@@ -1,0 +1,31 @@
+# TypeMastery
+
+> TypeMastery is a fast, free, distraction-free typing speed test and touch-typing practice website specifically designed and optimized for software developers and touch-typing beginners.
+
+## Core Features
+- **Distraction-Free Environment**: Dark mode, minimal interface, zero distraction layout.
+- **Dedicated Programmer Mode**: Custom coding typing practice using real syntax from standard programming languages.
+- **Local Storage Analytics**: Complete performance analytics (adjusted WPM, accuracy, gross WPM, streaks, session history, levels, and experience points) are saved 100% privately on the user's browser local storage. No server storage or account creation required.
+- **Interactive Mechanics**: Audio feedback resembling mechanical keyboard switches (can be toggled on/off).
+- **Gamified Progression**: Experience points (XP) system with leveling, streaks, and unlocked achievements (e.g. "Speed Demon", "React Pro").
+
+## Typing Practice Modes
+TypeMastery supports various practice modes tailored to different target skills:
+- **Focus**: Balanced pace, error review, and daily consistency with home-row rhythm ladder words.
+- **Speed**: Shorter reset windows and longer real-world prose phrases to push maximum WPM.
+- **Precision**: Punishing layout designed to train clean streaks by incorporating numbers and special symbols.
+- **Python**: Real Python syntax, class definitions, function headers, list comprehensions, and imports.
+- **Web Dev**: Web development code typing incorporating CSS styles, HTML elements, React hooks, and JavaScript event listeners.
+- **Data**: SQL queries (with uppercase keywords and snake_case tables) alongside Pandas data manipulation pipelines.
+- **Custom**: Paste and practice any custom code snippet or text text.
+
+## Main Navigation / Key Sections
+- **Typing Speed Test (Main App)**: [https://www.typemastery.me/](https://www.typemastery.me/)
+  - Interactive mode switcher to toggle between practice sets.
+  - Reset round controls, progress percentage tracker, and live-updating analytics grids.
+- **Why it is Different (Side Card)**: Summary of local-first privacy, adaptive drills, and developer support.
+- **Recent Runs**: Local performance history of the last 6 completed rounds.
+- **WPM Progress Chart**: Visual SVG line chart representing historical WPM improvement over time.
+- **Achievements Panel**: Unlocked status of 12 developmental badges (e.g., Perfectionist, Pythonista).
+- **Typing Tips & Guides**: Extensive guides on touch typing patterns, ergonomics, routines, and specific programming language typing optimization.
+- **Frequently Asked Questions (FAQ)**: Details on free hosting architecture, static client advantages, and future ad monetization layouts.

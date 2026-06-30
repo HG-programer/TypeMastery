@@ -1,7 +1,17 @@
 User-agent: *
 Allow: /
-Allow: /#typing-speed-test
-Allow: /#typing-tips
-Allow: /#faq
+
+# Explicit access for AI search agents and LLM crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
 
 Sitemap: https://www.typemastery.me/sitemap.xml

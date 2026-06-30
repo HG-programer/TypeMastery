@@ -54,7 +54,7 @@ button {
   grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.8fr);
   gap: 24px;
   align-items: stretch;
-  margin-bottom: 56px;
+  margin-bottom: 24px;
 }
 
 .eyebrow {

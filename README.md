@@ -1,4 +1,4 @@
-# Keyflow Typing Practice
+# TypeMastery Typing Practice
 
 A static, client-only typing practice website built with Vite + React + TypeScript.
 
