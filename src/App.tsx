@@ -1117,6 +1117,14 @@ export default function App() {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   }, [history]);
 
+  const startRound = useCallback(() => {
+    setSetIndex((prev) => prev + 1);
+    setTyped('');
+    setStartedAt(null);
+    setFinishedAt(null);
+    textareaRef.current?.focus();
+  }, []);
+
   useEffect(() => {
     if (isComplete && startedAt && !finishedAt) {
       const now = Date.now();
@@ -1231,13 +1239,7 @@ export default function App() {
     return errorCount;
   }, [targetText, typed]);
 
-  const startRound = useCallback(() => {
-    setSetIndex((prev) => prev + 1);
-    setTyped('');
-    setStartedAt(null);
-    setFinishedAt(null);
-    textareaRef.current?.focus();
-  }, []);
+
 
   const handleModeChange = (newMode: Mode) => {
     if (mode === newMode) return;
