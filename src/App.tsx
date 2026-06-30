@@ -1465,14 +1465,7 @@ export default function App() {
         </div>
 
         <div className="side-column">
-          <section className="feature-card">
-            <p className="eyebrow">Why this is different</p>
-            <ul>
-              <li>100% private sessions stored locally on your device.</li>
-              <li>Adaptive practice sets and mode-based drills instead of one static text stream.</li>
-              <li>A dedicated Programmer Mode designed specifically for writing code.</li>
-            </ul>
-          </section>
+          <ProgressChart history={fullHistory} />
           <section className="history-card">
             <p className="eyebrow">Recent runs</p>
             {history.length === 0 ? (
@@ -1492,7 +1485,14 @@ export default function App() {
             )}
           </section>
 
-          <ProgressChart history={fullHistory} />
+          <section className="feature-card">
+            <p className="eyebrow">Why this is different</p>
+            <ul>
+              <li>100% private sessions stored locally on your device.</li>
+              <li>Adaptive practice sets and mode-based drills instead of one static text stream.</li>
+              <li>A dedicated Programmer Mode designed specifically for writing code.</li>
+            </ul>
+          </section>
           <AchievementsPanel unlockedIds={unlockedAchievements} />
         </div>
       </section>
