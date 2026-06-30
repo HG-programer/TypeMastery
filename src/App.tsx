@@ -781,6 +781,212 @@ function ShareCard({ score, mode, language, accentColor }: { score: number; mode
   );
 }
 
+const KEYBOARD_ROWS = [
+  // Row 1
+  [
+    { code: '`', label: '`', shiftLabel: '~', size: 1 },
+    { code: '1', label: '1', shiftLabel: '!', size: 1 },
+    { code: '2', label: '2', shiftLabel: '@', size: 1 },
+    { code: '3', label: '3', shiftLabel: '#', size: 1 },
+    { code: '4', label: '4', shiftLabel: '$', size: 1 },
+    { code: '5', label: '5', shiftLabel: '%', size: 1 },
+    { code: '6', label: '6', shiftLabel: '^', size: 1 },
+    { code: '7', label: '7', shiftLabel: '&', size: 1 },
+    { code: '8', label: '8', shiftLabel: '*', size: 1 },
+    { code: '9', label: '9', shiftLabel: '(', size: 1 },
+    { code: '0', label: '0', shiftLabel: ')', size: 1 },
+    { code: '-', label: '-', shiftLabel: '_', size: 1 },
+    { code: '=', label: '=', shiftLabel: '+', size: 1 },
+    { code: 'backspace', label: 'Bksp', size: 1.8 }
+  ],
+  // Row 2
+  [
+    { code: 'tab', label: 'Tab', size: 1.5 },
+    { code: 'q', label: 'Q', size: 1 },
+    { code: 'w', label: 'W', size: 1 },
+    { code: 'e', label: 'E', size: 1 },
+    { code: 'r', label: 'R', size: 1 },
+    { code: 't', label: 'T', size: 1 },
+    { code: 'y', label: 'Y', size: 1 },
+    { code: 'u', label: 'U', size: 1 },
+    { code: 'i', label: 'I', size: 1 },
+    { code: 'o', label: 'O', size: 1 },
+    { code: 'p', label: 'P', size: 1 },
+    { code: '[', label: '[', shiftLabel: '{', size: 1 },
+    { code: ']', label: ']', shiftLabel: '}', size: 1 },
+    { code: '\\', label: '\\', shiftLabel: '|', size: 1.3 }
+  ],
+  // Row 3
+  [
+    { code: 'caps', label: 'Caps', size: 1.8 },
+    { code: 'a', label: 'A', size: 1 },
+    { code: 's', label: 'S', size: 1 },
+    { code: 'd', label: 'D', size: 1 },
+    { code: 'f', label: 'F', size: 1 },
+    { code: 'g', label: 'G', size: 1 },
+    { code: 'h', label: 'H', size: 1 },
+    { code: 'j', label: 'J', size: 1 },
+    { code: 'k', label: 'K', size: 1 },
+    { code: 'l', label: 'L', size: 1 },
+    { code: ';', label: ';', shiftLabel: ':', size: 1 },
+    { code: '\'', label: '\'', shiftLabel: '"', size: 1 },
+    { code: 'enter', label: 'Enter', size: 2 }
+  ],
+  // Row 4
+  [
+    { code: 'shift-left', label: 'Shift', size: 2.2 },
+    { code: 'z', label: 'Z', size: 1 },
+    { code: 'x', label: 'X', size: 1 },
+    { code: 'c', label: 'C', size: 1 },
+    { code: 'v', label: 'V', size: 1 },
+    { code: 'b', label: 'B', size: 1 },
+    { code: 'n', label: 'N', size: 1 },
+    { code: 'm', label: 'M', size: 1 },
+    { code: ',', label: ',', shiftLabel: '<', size: 1 },
+    { code: '.', label: '.', shiftLabel: '>', size: 1 },
+    { code: '/', label: '/', shiftLabel: '?', size: 1 },
+    { code: 'shift-right', label: 'Shift', size: 2.6 }
+  ],
+  // Row 5
+  [
+    { code: 'ctrl-left', label: 'Ctrl', size: 1.5 },
+    { code: 'alt-left', label: 'Alt', size: 1.5 },
+    { code: 'space', label: 'Space', size: 8.8 },
+    { code: 'alt-right', label: 'Alt', size: 1.5 },
+    { code: 'ctrl-right', label: 'Ctrl', size: 1.5 }
+  ]
+];
+
+function getKeyAndFinger(char: string): { key: string; finger: string; requiresShift: boolean } {
+  if (!char) return { key: '', finger: '', requiresShift: false };
+  const c = char.toLowerCase();
+  
+  const isUpper = char !== c && char === char.toUpperCase() && /[a-z]/i.test(char);
+  const shiftChars = '~!@#$%^&*()_+{}|:"<>?';
+  const requiresShift = isUpper || shiftChars.includes(char);
+  
+  let key = c;
+  if (c === ' ' || c === '\n') key = 'space';
+  else if (c === '\t') key = 'tab';
+  else if ('~!'.includes(char)) key = '`';
+  else if (char === '@') key = '2';
+  else if (char === '#') key = '3';
+  else if (char === '$') key = '4';
+  else if (char === '%') key = '5';
+  else if (char === '^') key = '6';
+  else if (char === '&') key = '7';
+  else if (char === '*') key = '8';
+  else if (char === '(') key = '9';
+  else if (char === ')') key = '0';
+  else if ('_-'.includes(char)) key = '-';
+  else if ('+='.includes(char)) key = '=';
+  else if ('{['.includes(char)) key = '[';
+  else if ('}]'.includes(char)) key = ']';
+  else if ('|\\'.includes(char)) key = '\\';
+  else if (':;'.includes(char)) key = ';';
+  else if ('"\''.includes(char)) key = '\'';
+  else if ('<,'.includes(char)) key = ',';
+  else if ('>.'.includes(char)) key = '.';
+  else if (char === '?') key = '/';
+  
+  let finger = '';
+  
+  // Standard touch-typing finger mappings
+  const leftPinky = '`~1!qqaazZ';
+  const leftRing = '2@wwssxx';
+  const leftMiddle = '3#eeddcc';
+  const leftIndex = '4$5%rrttffggvvbb';
+  const rightIndex = '6^7&yyuuhhjjnnbbmm'; 
+  const rightMiddle = '8*iikk,,<<';
+  const rightRing = '9(ooll..>>';
+  const rightPinky = '0)-_=+[{]}|\\;:""\'\'/?';
+  
+  if (leftPinky.includes(char) || char === 'Tab') finger = 'LP';
+  else if (leftRing.includes(char)) finger = 'LR';
+  else if (leftMiddle.includes(char)) finger = 'LM';
+  else if (leftIndex.includes(char)) finger = 'LI';
+  else if (char === ' ' || char === '\n') finger = 'space';
+  else if (rightIndex.includes(char)) finger = 'RI';
+  else if (rightMiddle.includes(char)) finger = 'RM';
+  else if (rightRing.includes(char)) finger = 'RR';
+  else if (rightPinky.includes(char) || char === 'Enter') finger = 'RP';
+  
+  return { key, finger, requiresShift };
+}
+
+function HandsVisualizer({ activeFinger }: { activeFinger: string }) {
+  const isLeftThumbActive = activeFinger === 'LT' || activeFinger === 'space';
+  const isRightThumbActive = activeFinger === 'RT' || activeFinger === 'space';
+  
+  return (
+    <div className="hands-container" aria-hidden="true">
+      <svg width="240" height="110" viewBox="0 0 240 110" className="hands-svg">
+        {/* Left Hand */}
+        <g className="left-hand" transform="translate(10, 10)">
+          {/* Palm */}
+          <path d="M40 90 C 30 90, 15 80, 15 60 C 15 45, 25 40, 35 40 C 45 40, 50 45, 55 55 L 60 70 Z" fill="rgba(255,255,255,0.02)" stroke="var(--panel-border)" stroke-width="1.5" />
+          {/* Pinky */}
+          <rect id="LP" x="12" y="25" width="8" height="30" rx="4" className={`finger ${activeFinger === 'LP' ? 'active' : ''}`} />
+          {/* Ring */}
+          <rect id="LR" x="23" y="12" width="8" height="40" rx="4" className={`finger ${activeFinger === 'LR' ? 'active' : ''}`} />
+          {/* Middle */}
+          <rect id="LM" x="34" y="5" width="8" height="45" rx="4" className={`finger ${activeFinger === 'LM' ? 'active' : ''}`} />
+          {/* Index */}
+          <rect id="LI" x="45" y="10" width="8" height="42" rx="4" className={`finger ${activeFinger === 'LI' ? 'active' : ''}`} />
+          {/* Thumb */}
+          <rect id="LT" x="60" y="45" width="8" height="22" rx="4" transform="rotate(-30 60 45)" className={`finger ${isLeftThumbActive ? 'active' : ''}`} />
+        </g>
+        
+        {/* Right Hand */}
+        <g className="right-hand" transform="translate(130, 10)">
+          {/* Palm */}
+          <path d="M60 90 C 70 90, 85 80, 85 60 C 85 45, 75 40, 65 40 C 55 40, 50 45, 45 55 L 40 70 Z" fill="rgba(255,255,255,0.02)" stroke="var(--panel-border)" stroke-width="1.5" />
+          {/* Thumb */}
+          <rect id="RT" x="32" y="45" width="8" height="22" rx="4" transform="rotate(30 32 45)" className={`finger ${isRightThumbActive ? 'active' : ''}`} />
+          {/* Index */}
+          <rect id="RI" x="47" y="10" width="8" height="42" rx="4" className={`finger ${activeFinger === 'RI' ? 'active' : ''}`} />
+          {/* Middle */}
+          <rect id="RM" x="58" y="5" width="8" height="45" rx="4" className={`finger ${activeFinger === 'RM' ? 'active' : ''}`} />
+          {/* Ring */}
+          <rect id="RR" x="69" y="12" width="8" height="40" rx="4" className={`finger ${activeFinger === 'RR' ? 'active' : ''}`} />
+          {/* Pinky */}
+          <rect id="RP" x="80" y="25" width="8" height="30" rx="4" className={`finger ${activeFinger === 'RP' ? 'active' : ''}`} />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function VirtualKeyboard({ targetKey, activeShiftKey }: { targetKey: string; activeShiftKey: string | null }) {
+  return (
+    <div className="keyboard-container" aria-hidden="true">
+      {KEYBOARD_ROWS.map((row, rIdx) => (
+        <div key={rIdx} className="keyboard-row">
+          {row.map((key) => {
+            const isTarget = targetKey === key.code;
+            const isShift = activeShiftKey === key.code;
+            
+            let keyClass = 'key-cap';
+            if (isTarget) keyClass += ' next-key';
+            else if (isShift) keyClass += ' active-shift';
+            
+            return (
+              <div 
+                key={key.code} 
+                className={keyClass} 
+                style={{ flex: `${key.size} 0 0` }}
+              >
+                {key.shiftLabel && <span className="shift-label">{key.shiftLabel}</span>}
+                <span>{key.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function App() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [mode, setMode] = useState<Mode>(() => {
@@ -797,6 +1003,10 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return window.localStorage.getItem('typemastery-sound') === 'true';
+  });
+  const [keyboardEnabled, setKeyboardEnabled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    return window.localStorage.getItem('typemastery-keyboard') !== 'false';
   });
 
   const [fullHistory, setFullHistory] = useState<HistoryItem[]>(() => loadFullHistory());
@@ -815,6 +1025,16 @@ export default function App() {
     return wpmList.length > 0 ? Math.max(...wpmList) : 0;
   }, [fullHistory, history]);
 
+  const nextChar = targetText[typed.length] || '';
+  const { key: targetKey, finger: nextFinger, requiresShift } = useMemo(() => {
+    return nextChar ? getKeyAndFinger(nextChar) : { key: '', finger: '', requiresShift: false };
+  }, [nextChar]);
+
+  const activeShiftKey = useMemo(() => {
+    if (!requiresShift) return null;
+    return '`~1!2@3#4$5%qQwWeErRtTfFgGvVbB'.includes(nextChar) ? 'shift-right' : 'shift-left';
+  }, [requiresShift, nextChar]);
+
   useEffect(() => {
     window.localStorage.setItem('typemastery-mode', mode);
   }, [mode]);
@@ -822,6 +1042,10 @@ export default function App() {
   useEffect(() => {
     window.localStorage.setItem('typemastery-sound', String(soundEnabled));
   }, [soundEnabled]);
+
+  useEffect(() => {
+    window.localStorage.setItem('typemastery-keyboard', String(keyboardEnabled));
+  }, [keyboardEnabled]);
 
   useEffect(() => {
     window.localStorage.setItem(FULL_HISTORY_KEY, JSON.stringify(fullHistory));
@@ -1088,14 +1312,26 @@ export default function App() {
                 </button>
               ))}
             </div>
-            <button 
-              className="mode-button" 
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              title={soundEnabled ? "Disable mechanical keyboard sound" : "Enable mechanical keyboard sound"}
-              style={{ margin: 0, padding: '10px 14px', fontSize: '1.2rem', borderColor: soundEnabled ? 'var(--accent)' : 'transparent', background: soundEnabled ? 'rgba(79, 156, 249, 0.1)' : 'rgba(255, 255, 255, 0.04)' }}
-            >
-              {soundEnabled ? '🔊' : '🔈'}
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button 
+                type="button"
+                className="mode-button" 
+                onClick={() => setKeyboardEnabled(!keyboardEnabled)}
+                title={keyboardEnabled ? "Hide visual keyboard & hands" : "Show visual keyboard & hands"}
+                style={{ margin: 0, padding: '10px 14px', fontSize: '1.2rem', borderColor: keyboardEnabled ? 'var(--accent)' : 'transparent', background: keyboardEnabled ? 'rgba(79, 156, 249, 0.1)' : 'rgba(255, 255, 255, 0.04)' }}
+              >
+                ⌨️
+              </button>
+              <button 
+                type="button"
+                className="mode-button" 
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                title={soundEnabled ? "Disable mechanical keyboard sound" : "Enable mechanical keyboard sound"}
+                style={{ margin: 0, padding: '10px 14px', fontSize: '1.2rem', borderColor: soundEnabled ? 'var(--accent)' : 'transparent', background: soundEnabled ? 'rgba(79, 156, 249, 0.1)' : 'rgba(255, 255, 255, 0.04)' }}
+              >
+                {soundEnabled ? '🔊' : '🔈'}
+              </button>
+            </div>
           </div>
 
           <div className="typing-card fade-in" key={mode}>
@@ -1169,6 +1405,12 @@ export default function App() {
               aria-label="Typing input"
               autoFocus
             />
+            {keyboardEnabled && !isComplete && (
+              <div className="virtual-keyboard-section">
+                <VirtualKeyboard targetKey={targetKey} activeShiftKey={activeShiftKey} />
+                <HandsVisualizer activeFinger={nextFinger} />
+              </div>
+            )}
             <div className="stat-grid">
               <article>
                 <span>Adjusted WPM</span>

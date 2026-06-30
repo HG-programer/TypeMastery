@@ -794,3 +794,116 @@ textarea:focus {
   }
 }
 
+/* ========== Virtual Keyboard & Hands Guide ========== */
+.virtual-keyboard-section {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.keyboard-container {
+  width: 100%;
+  max-width: 680px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.keyboard-row:last-child {
+  margin-bottom: 0;
+}
+
+.key-cap {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-soft);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+  user-select: none;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.key-cap span.shift-label {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.key-cap.next-key {
+  border-color: var(--accent);
+  background: rgba(79, 156, 249, 0.18);
+  box-shadow: 0 0 12px rgba(79, 156, 249, 0.25);
+  color: #ffffff;
+  font-weight: 700;
+  transform: translateY(-1px);
+}
+
+.key-cap.active-shift {
+  border-color: rgba(79, 156, 249, 0.5);
+  background: rgba(79, 156, 249, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Hands visualizer */
+.hands-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hands-svg {
+  width: 220px;
+  height: auto;
+  overflow: visible;
+}
+
+.hands-svg .finger {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: var(--panel-border);
+  stroke-width: 1.5px;
+  transition: fill 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+}
+
+.hands-svg .finger.active {
+  fill: rgba(79, 156, 249, 0.3);
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 4px rgba(79, 156, 249, 0.6));
+}
+
+@media (max-width: 640px) {
+  .keyboard-container {
+    padding: 8px;
+  }
+  .key-cap {
+    height: 32px;
+    font-size: 0.7rem;
+    border-radius: 4px;
+  }
+  .keyboard-row {
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+
