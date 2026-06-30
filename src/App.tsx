@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 
 declare global {
   interface Window {
@@ -163,17 +163,17 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'Is this typing speed test free?',
     answer:
-      'Yes. TypeMastery is a static client-only app, so it can be hosted free without server costs or backend infrastructure. That matters if you want a typing practice website that can scale with traffic instead of with server bills. A static host such as GitHub Pages, Cloudflare Pages, or Netlify can serve the page quickly, and the browser handles the typing test locally. That keeps the site simple to maintain, improves crawlability, and makes it easier to focus on search intent: users land on the page and start typing immediately instead of waiting for an app shell or login flow.',
+      'Yes. TypeMastery is 100% free to use. There are no paywalls, subscriptions, or hidden charges. All of your typing sessions, history, and stats are processed and stored locally in your browser, meaning you can practice as much as you want without registering for an account.',
   },
   {
-    question: 'How is this different from Keybr?',
+    question: 'How is this different from other typing websites?',
     answer:
-      'It focuses on a cleaner ad-ready interface, local history, and a content hub that supports both beginners and advanced practice. The goal is to make the page feel more like a useful resource hub and less like a single-purpose test page. That means visible navigation, useful guides, and room for monetization later without burying the typing speed test. It also gives you a path to topical authority because the site can grow from one experience into a cluster of related pages about typing practice for beginners, touch typing drills, and speed improvement tips.',
+      'TypeMastery provides a completely distraction-free experience. Unlike other platforms, we focus on a clean dark-mode interface, detailed locally-saved WPM graphs, and a dedicated Programmer Mode specifically tailored to code syntax practice (Python, Web Development, and SQL/Pandas) rather than just standard dictionary words.',
   },
   {
-    question: 'Can I add ads later?',
+    question: 'How is my typing speed (WPM) calculated?',
     answer:
-      'Yes. The layout already includes reserved ad slots and clear content boundaries so monetization can be added later without a redesign. That is important because ads work best when they do not interrupt the user’s primary task. If the site keeps its structure clean, you can introduce display ads, affiliate placements, or sponsorship blocks once traffic grows, while still protecting mobile performance and the page’s usefulness. That balance helps the site stay trustworthy while creating a future revenue path.',
+      'Your Gross WPM is calculated by taking the total number of characters typed divided by 5, then dividing that by the elapsed time in minutes. Adjusted WPM takes your accuracy into account (Gross WPM × Accuracy %) to represent your true typing speed, which encourages typing accurately rather than just rushing.',
   },
 ];
 
@@ -190,7 +190,7 @@ const GUIDE_ARTICLES: GuideArticle[] = [
     title: 'How to improve typing speed without sacrificing accuracy',
     content: [
       'If your goal is to improve typing speed, the fastest path is not to rush the clock. It is to build a repeatable rhythm that makes every keypress cheaper for your brain to process. Start with a typing speed test so you can see your baseline, then practice with short sessions that keep your focus high. Ten minutes of accurate work every day will usually beat one long session where you drift, correct, and lose concentration. The best typing practice for beginners is simple enough that your hands can learn the pattern while your eyes stay on the text.',
-      'Use the first minute of every session to warm up with easy sequences, then move into longer phrases that include spaces and punctuation. That mixture matters because real search traffic often comes from people looking for a typing speed test, touch typing practice, or a way to learn typing for work and school. If the page gives them the test instantly and then offers a clear path to practice, it satisfies search intent and keeps them engaged. Track accuracy first, because clean typing on a free static site is a better sign of progress than a noisy score that jumps around.',
+      'Use the first minute of every session to warm up with easy word sequences, then transition to longer phrases that include numbers, capital letters, and punctuation. Maintaining a consistent cadence—rather than typing in sudden bursts—helps your brain map key placements more fluidly. Prioritize accuracy above raw speed; once your error rate drops, your speed will naturally increase without conscious effort.',
     ],
   },
   {
@@ -198,15 +198,15 @@ const GUIDE_ARTICLES: GuideArticle[] = [
     title: 'Learn touch typing with structured finger patterns',
     content: [
       'To learn touch typing, start by understanding that speed is a byproduct of consistent finger placement. A good typing practice website should not overwhelm the user with too much text or too many controls. Instead, it should present a clear prompt, a visible progress bar, and feedback that tells the user whether the pattern is correct. This is the core of a usable typing speed test: the user starts immediately, sees the target text, and gets a score that feels trustworthy.',
-      'This page is designed to support that behavior with several layers of topical authority. It includes beginner-friendly drills, content that explains how to improve typing speed, and local storage so returning users can see their history without creating a server bill. That makes it easier to keep the site fast on mobile and to host it for free on static infrastructure. Over time, you can add blog posts, lesson pages, and downloadable practice sheets that link back to the typing test. Those internal links help crawlers understand the relationship between the pages and build authority around the topic of typing practice.',
+      'Touch typing relies on tactile references. Keep your hands resting lightly on the home row keys (ASDF for the left hand, JKL; for the right), using the physical ridges on the F and J keys to realign your index fingers without looking down. By standardizing which finger presses each key and returning to the home row after every stroke, you eliminate visual search delays and build solid muscle memory.',
     ],
   },
   {
     label: 'Routine',
     title: 'Ergonomics, shortcuts, and practice routines that stick',
     content: [
-      'Typing speed is not only about finger speed. It also depends on posture, keyboard position, and how long you can stay comfortable without tension. Keep your wrists neutral, place the keyboard close enough that your elbows can relax, and raise the screen so you are not looking down for long sessions. Those ergonomics details matter because a typing practice website should help users build sustainable habits, not just chase one score spike. If you are writing content for search, terms like ergonomic typing setup, comfortable typing practice, and typing speed test for beginners are natural additions that match real user intent.',
-      'Shortcuts can also improve productivity once your base typing rhythm is stable. Learn browser shortcuts, tab navigation, copy and paste, and the shortcuts you use most in your own work. Then combine that with a practice routine: one warm-up drill, one accuracy drill, and one timed run. That structure is easy to repeat, easy to measure, and easy to explain in a blog post or FAQ. If you want topical authority, build content around routines, not only scores, so the site becomes a resource people return to when they want to improve typing speed week after week.',
+      'Typing speed is not only about finger agility; it also depends heavily on posture, keyboard position, and physical comfort. Keep your wrists neutral and elevated rather than resting them on desk edges. Position your keyboard close enough so your elbows can relax at a 90-degree angle, and raise your screen to eye level to avoid neck strain. Good physical alignment helps you build sustainable habits and type for longer periods without fatigue.',
+      'Familiarizing yourself with standard system shortcuts (like browser tab switching, text navigation, and editing commands) will compound your productivity once your base typing rhythm is stable. Combine these skills into a daily practice routine: start with a simple warm-up run, move to a high-precision drill to calibrate your hands, and finish with a timed speed test. Having a structured routine ensures steady progress week after week.',
     ],
   },
   {
@@ -1201,8 +1201,19 @@ export default function App() {
           value: liveStats.adjustedWpm
         });
       }
+
+      if (mode === 'Focus') {
+        setTimeout(() => {
+          setFinishedAt((currentFinishedAt) => {
+            if (currentFinishedAt === now) {
+              startRound();
+            }
+            return currentFinishedAt;
+          });
+        }, 1200);
+      }
     }
-  }, [finishedAt, isComplete, liveStats, mode, startedAt, streakData, xpData, modeCounts, fullHistory, history, unlockedAchievements]);
+  }, [finishedAt, isComplete, liveStats, mode, startedAt, streakData, xpData, modeCounts, fullHistory, history, unlockedAchievements, startRound]);
 
   useEffect(() => {
     if (toastMsg) {
@@ -1220,13 +1231,13 @@ export default function App() {
     return errorCount;
   }, [targetText, typed]);
 
-  const startRound = () => {
+  const startRound = useCallback(() => {
     setSetIndex((prev) => prev + 1);
     setTyped('');
     setStartedAt(null);
     setFinishedAt(null);
     textareaRef.current?.focus();
-  };
+  }, []);
 
   const handleModeChange = (newMode: Mode) => {
     if (mode === newMode) return;
@@ -1500,7 +1511,7 @@ export default function App() {
               </p>
             ) : index === 1 ? (
               <p>
-                The <a href="#faq">FAQ</a> explains common questions, while the test above handles the interactive search intent immediately.
+                The <a href="#faq">FAQ</a> explains common questions, while the test above lets you start practicing immediately.
               </p>
             ) : (
               <p>
@@ -1513,7 +1524,7 @@ export default function App() {
 
       <ShareCard score={bestScore} mode={mode} language={currentSet.language} accentColor={currentSet.color} />
 
-      <section className="guide-grid" id="programmer-seo" style={{ marginBottom: '60px' }}>
+      <section className="guide-grid" id="programmer-guide" style={{ marginBottom: '60px' }}>
         <article className="guide-card" style={{ gridColumn: '1 / -1' }}>
           <p className="eyebrow">Typing Practice for Programmers 💻</p>
           <h2>Why programmers need typing practice</h2>
@@ -1538,10 +1549,10 @@ export default function App() {
       <section className="faq-section" id="faq">
         <div className="panel-header faq-header">
           <div>
-            <p className="eyebrow">FAQ schema</p>
+            <p className="eyebrow">FAQ</p>
             <h2>Common questions</h2>
           </div>
-          <a href="#seo-summary">Back to keywords</a>
+          <a href="#typing-speed-test">Back to typing test</a>
         </div>
         <div className="faq-list">
           {FAQ_ITEMS.map((item) => (
