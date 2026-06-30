@@ -50,6 +50,37 @@ type HistoryItem = {
   accuracy: number;
   mode: Mode;
   date: string;
+  timestamp?: number;
+};
+
+type StreakData = {
+  current: number;
+  best: number;
+  lastPracticeDate: string;
+};
+
+type XpData = {
+  total: number;
+  level: number;
+};
+
+type AchievementContext = {
+  wpm: number;
+  accuracy: number;
+  mode: Mode;
+  streak: number;
+  level: number;
+  modeCounts: Record<string, number>;
+  totalRounds: number;
+  prevBest: number;
+};
+
+type AchievementDef = {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  check: (ctx: AchievementContext) => boolean;
 };
 
 type FaqItem = {
@@ -112,6 +143,22 @@ const MODE_DETAILS: Record<Mode, string> = {
   Custom: 'Paste your own code or text to practice on.',
 };
 
+const ACHIEVEMENTS: AchievementDef[] = [
+  { id: 'first-steps', name: 'First Steps', icon: '🏁', description: 'Complete your first round', check: (c) => c.totalRounds >= 1 },
+  { id: 'speed-demon', name: 'Speed Demon', icon: '⚡', description: 'Hit 60+ WPM', check: (c) => c.wpm >= 60 },
+  { id: 'rocket-fingers', name: 'Rocket Fingers', icon: '🚀', description: 'Hit 80+ WPM', check: (c) => c.wpm >= 80 },
+  { id: 'perfectionist', name: 'Perfectionist', icon: '💯', description: '100% accuracy on any round', check: (c) => c.accuracy === 100 },
+  { id: 'on-fire', name: 'On Fire', icon: '🔥', description: '3-day streak', check: (c) => c.streak >= 3 },
+  { id: 'unstoppable', name: 'Unstoppable', icon: '🏆', description: '7-day streak', check: (c) => c.streak >= 7 },
+  { id: 'pythonista', name: 'Pythonista', icon: '🐍', description: 'Complete 10 Python rounds', check: (c) => (c.modeCounts['Python'] || 0) >= 10 },
+  { id: 'react-native', name: 'React Pro', icon: '⚛️', description: 'Complete 10 Web Dev rounds', check: (c) => (c.modeCounts['Web Dev'] || 0) >= 10 },
+  { id: 'data-wizard', name: 'Data Wizard', icon: '🗄️', description: 'Complete 10 Data rounds', check: (c) => (c.modeCounts['Data'] || 0) >= 10 },
+  { id: 'custom-crafter', name: 'Custom Crafter', icon: '✏️', description: 'Complete 5 Custom rounds', check: (c) => (c.modeCounts['Custom'] || 0) >= 5 },
+  { id: 'improver', name: 'Improver', icon: '📈', description: 'Beat your previous best WPM', check: (c) => c.wpm > c.prevBest && c.prevBest > 0 },
+  { id: 'level-5', name: 'Level 5', icon: '⭐', description: 'Reach Level 5', check: (c) => c.level >= 5 },
+];
+
+
 const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'Is this typing speed test free?',
@@ -162,9 +209,46 @@ const GUIDE_ARTICLES: GuideArticle[] = [
       'Shortcuts can also improve productivity once your base typing rhythm is stable. Learn browser shortcuts, tab navigation, copy and paste, and the shortcuts you use most in your own work. Then combine that with a practice routine: one warm-up drill, one accuracy drill, and one timed run. That structure is easy to repeat, easy to measure, and easy to explain in a blog post or FAQ. If you want topical authority, build content around routines, not only scores, so the site becomes a resource people return to when they want to improve typing speed week after week.',
     ],
   },
+  {
+    label: 'Python typing',
+    title: 'How to type faster in Python: syntax drills for developers',
+    content: [
+      'Python relies heavily on colons, underscores (snake_case), and strict indentation. If your hands hesitate when reaching for the colon or the underscore key, your programming speed will suffer even if your English prose typing is fast. The best way to type faster in Python is to practice on actual code snippets. A Python typing test forces you to build muscle memory for common patterns like "def __init__(self):" and list comprehensions without looking at the keyboard.',
+      'To build this skill, switch to the Python mode on our typing speed test. Practice hitting the underscore with your right pinky (using shift) and the colon with your right pinky. Spend five minutes a day specifically drilling these programming symbols. Over time, your raw WPM will translate into real coding speed because you won\'t need to break your mental flow to hunt for syntax characters.',
+    ],
+  },
+  {
+    label: 'React typing',
+    title: 'Best typing practice for React and JavaScript developers',
+    content: [
+      'JavaScript and React development involve a massive amount of camelCase typing, curly braces, parentheses, and arrow functions (=>). If you are slow at typing these symbols, your component creation process will feel sluggish. Typing practice for React developers should focus on the exact hooks and JSX structures you write every day: "useState", "useEffect", and HTML-like tags.',
+      'Our Web Dev typing test mode is designed specifically for this. It mixes JavaScript logic with HTML and CSS syntax. By practicing these snippets, you train your hands to navigate brackets and camelCase seamlessly. Combine this with editor snippets and autocomplete, and you will see a massive improvement in your daily development velocity.',
+    ],
+  },
+  {
+    label: 'SQL typing',
+    title: 'Typing practice for data engineers: SQL and Pandas drills',
+    content: [
+      'Data engineering and data science require typing long SQL queries in ALL CAPS, mixed with string manipulation and Pandas dataframe operations. Typing "SELECT * FROM" or "df.groupby" repeatedly without typos requires specific muscle memory. If you want to improve your typing speed for data work, you need drills that mix uppercase keywords with snake_case table names.',
+      'The Data mode provides targeted typing practice for SQL and Python Pandas. By drilling these specific data pipelines, you learn to keep your hands on the home row while reaching for the shift key and bracket keys. This reduces typos in your queries and helps you stay focused on the data analysis rather than the mechanics of typing.',
+    ],
+  },
+  {
+    label: 'Daily practice',
+    title: 'Why five minutes of daily typing practice beats one weekly marathon',
+    content: [
+      'When learning touch typing or trying to improve your typing speed, consistency is far more important than duration. Practicing for an hour once a week usually leads to fatigue, bad posture, and reinforced mistakes. Instead, committing to just five minutes of typing practice every single day allows your brain to consolidate the motor patterns during sleep. This is the secret to breaking through a WPM plateau.',
+      'To build this habit, use the streak tracker on this typing speed test. Log in daily, complete the Daily Challenge snippet, and watch your streak grow. This gamified approach ensures you get your targeted syntax practice without burning out. Over a month of daily five-minute sessions, most users see a 10 to 15 WPM increase in their baseline typing speed.',
+    ],
+  },
 ];
 
 const STORAGE_KEY = 'keyflow-history';
+const FULL_HISTORY_KEY = 'typemastery-full-history';
+const STREAK_KEY = 'typemastery-streak';
+const XP_KEY = 'typemastery-xp';
+const ACHIEVEMENTS_KEY = 'typemastery-achievements';
+const MODE_COUNTS_KEY = 'typemastery-mode-counts';
 
 function isSafeUrl(url: string): boolean {
   try {
@@ -187,6 +271,67 @@ function loadHistory(): HistoryItem[] {
     return [];
   }
 }
+
+function loadFullHistory(): HistoryItem[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(FULL_HISTORY_KEY);
+    return raw ? (JSON.parse(raw) as HistoryItem[]) : [];
+  } catch { return []; }
+}
+
+function loadStreak(): StreakData {
+  const empty: StreakData = { current: 0, best: 0, lastPracticeDate: '' };
+  if (typeof window === 'undefined') return empty;
+  try {
+    const raw = window.localStorage.getItem(STREAK_KEY);
+    return raw ? (JSON.parse(raw) as StreakData) : empty;
+  } catch { return empty; }
+}
+
+function loadXp(): XpData {
+  const empty: XpData = { total: 0, level: 0 };
+  if (typeof window === 'undefined') return empty;
+  try {
+    const raw = window.localStorage.getItem(XP_KEY);
+    return raw ? (JSON.parse(raw) as XpData) : empty;
+  } catch { return empty; }
+}
+
+function loadUnlockedAchievements(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(ACHIEVEMENTS_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch { return []; }
+}
+
+function loadModeCounts(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(MODE_COUNTS_KEY);
+    return raw ? (JSON.parse(raw) as Record<string, number>) : {};
+  } catch { return {}; }
+}
+
+function getToday(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getYesterday(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+function calculateLevel(totalXp: number): number {
+  return Math.floor(Math.sqrt(totalXp / 50));
+}
+
+function xpForLevel(level: number): number {
+  return level * level * 50;
+}
+
 
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat('en', {
@@ -307,6 +452,108 @@ function pickPracticeSet(mode: Mode, index: number, customText?: string) {
     description: 'Short words that build finger flow without extra noise.',
     text: FOCUS_SETS[index % FOCUS_SETS.length],
   };
+}
+
+function StreakBadge({ streak }: { streak: number }) {
+  if (streak < 2) return null;
+  return (
+    <div className="streak-badge" title={`${streak} day streak!`}>
+      🔥 {streak}
+    </div>
+  );
+}
+
+function XpBar({ xpData }: { xpData: XpData }) {
+  const currentLevelXp = xpForLevel(xpData.level);
+  const nextLevelXp = xpForLevel(xpData.level + 1);
+  const progressToNext = Math.min(100, Math.max(0, ((xpData.total - currentLevelXp) / (nextLevelXp - currentLevelXp)) * 100));
+
+  return (
+    <div className="xp-bar-container">
+      <div className="xp-bar-header">
+        <span className="level-text">Level {xpData.level || 1}</span>
+        <span className="xp-text">{xpData.total} / {nextLevelXp} XP</span>
+      </div>
+      <div className="xp-bar" aria-hidden="true">
+        <div className="xp-fill" style={{ width: `${progressToNext}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function ProgressChart({ history }: { history: HistoryItem[] }) {
+  if (history.length < 2) return null;
+
+  // We want chronological order for the chart (left to right)
+  const chartData = [...history].reverse();
+  const maxWpm = Math.max(...chartData.map(d => d.wpm), 10);
+  const minWpm = Math.max(0, Math.min(...chartData.map(d => d.wpm)) - 10);
+  
+  const wX = (index: number) => (index / (chartData.length - 1)) * 100;
+  const wY = (wpm: number) => 100 - (((wpm - minWpm) / (maxWpm - minWpm)) * 100);
+
+  const points = chartData.map((d, i) => `${wX(i)},${wY(d.wpm)}`).join(' ');
+  const areaPoints = `0,100 ${points} 100,100`;
+
+  const firstWpm = chartData[0].wpm;
+  const lastWpm = chartData[chartData.length - 1].wpm;
+  const diff = lastWpm - firstWpm;
+  const isUp = diff >= 0;
+
+  return (
+    <section className="progress-chart-section">
+      <div className="panel-header">
+        <div>
+          <p className="eyebrow">Analytics</p>
+          <h2>WPM Progress</h2>
+        </div>
+        <div className={`trend-badge ${isUp ? 'trend-up' : 'trend-down'}`}>
+          {isUp ? '↑' : '↓'} {Math.abs(diff)} WPM
+        </div>
+      </div>
+      <svg className="progress-chart-svg" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ height: '120px', overflow: 'visible' }}>
+        <defs>
+          <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <polygon points={areaPoints} fill="url(#chartFill)" />
+        <polyline points={points} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        {chartData.map((d, i) => (
+          <circle key={i} cx={wX(i)} cy={wY(d.wpm)} r="2" fill="var(--panel)" stroke="var(--accent)" strokeWidth="1.5">
+            <title>{d.wpm} WPM on {d.date}</title>
+          </circle>
+        ))}
+      </svg>
+    </section>
+  );
+}
+
+function AchievementsPanel({ unlockedIds }: { unlockedIds: string[] }) {
+  return (
+    <section className="achievements-section" id="achievements">
+      <div className="panel-header">
+        <div>
+          <p className="eyebrow">Gamification</p>
+          <h2>Achievements</h2>
+        </div>
+        <p>{unlockedIds.length} / {ACHIEVEMENTS.length} unlocked</p>
+      </div>
+      <div className="achievement-grid">
+        {ACHIEVEMENTS.map(badge => {
+          const isUnlocked = unlockedIds.includes(badge.id);
+          return (
+            <div key={badge.id} className={`achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`} title={badge.description}>
+              <span className="achievement-icon">{badge.icon}</span>
+              <strong>{isUnlocked ? badge.name : '???'}</strong>
+              <small>{badge.description}</small>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
 
 function SeoSchema() {
@@ -539,14 +786,21 @@ export default function App() {
     return window.localStorage.getItem('typemastery-sound') === 'true';
   });
 
+  const [fullHistory, setFullHistory] = useState<HistoryItem[]>(() => loadFullHistory());
+  const [streakData, setStreakData] = useState<StreakData>(() => loadStreak());
+  const [xpData, setXpData] = useState<XpData>(() => loadXp());
+  const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>(() => loadUnlockedAchievements());
+  const [modeCounts, setModeCounts] = useState<Record<string, number>>(() => loadModeCounts());
+  const [toastMsg, setToastMsg] = useState<{ id: number; msg: string; xp?: number } | null>(null);
+
   const currentSet = useMemo(() => pickPracticeSet(mode, setIndex, customText), [mode, setIndex, customText]);
   const targetText = currentSet.text;
   const isComplete = typed.length === targetText.length;
   const liveStats = calculateStats(targetText, typed, startedAt, finishedAt);
-  const bestScore = history.reduce(
-    (best, item) => Math.max(best, item.wpm),
-    0,
-  );
+  const bestScore = useMemo(() => {
+    const wpmList = [...fullHistory, ...history].map((item) => item.wpm);
+    return wpmList.length > 0 ? Math.max(...wpmList) : 0;
+  }, [fullHistory, history]);
 
   useEffect(() => {
     window.localStorage.setItem('typemastery-mode', mode);
@@ -555,6 +809,26 @@ export default function App() {
   useEffect(() => {
     window.localStorage.setItem('typemastery-sound', String(soundEnabled));
   }, [soundEnabled]);
+
+  useEffect(() => {
+    window.localStorage.setItem(FULL_HISTORY_KEY, JSON.stringify(fullHistory));
+  }, [fullHistory]);
+
+  useEffect(() => {
+    window.localStorage.setItem(STREAK_KEY, JSON.stringify(streakData));
+  }, [streakData]);
+
+  useEffect(() => {
+    window.localStorage.setItem(XP_KEY, JSON.stringify(xpData));
+  }, [xpData]);
+
+  useEffect(() => {
+    window.localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(unlockedAchievements));
+  }, [unlockedAchievements]);
+
+  useEffect(() => {
+    window.localStorage.setItem(MODE_COUNTS_KEY, JSON.stringify(modeCounts));
+  }, [modeCounts]);
 
   useEffect(() => {
     document.title = 'Typing Speed Test | Keyflow';
@@ -608,17 +882,80 @@ export default function App() {
 
   useEffect(() => {
     if (isComplete && startedAt && !finishedAt) {
-      setFinishedAt(Date.now());
-      setHistory((prev) => [
-        {
-          wpm: liveStats.adjustedWpm,
-          accuracy: liveStats.accuracy,
-          mode,
-          date: formatDate(new Date()),
-        },
-        ...prev,
-      ].slice(0, 6));
+      const now = Date.now();
+      setFinishedAt(now);
       
+      const newHistoryItem: HistoryItem = {
+        wpm: liveStats.adjustedWpm,
+        accuracy: liveStats.accuracy,
+        mode,
+        date: formatDate(new Date()),
+        timestamp: now,
+      };
+
+      setHistory((prev) => [newHistoryItem, ...prev].slice(0, 6));
+      setFullHistory((prev) => [...prev, newHistoryItem]);
+
+      // Mode Counts
+      const modeCountsSnapshot = { ...modeCounts, [mode]: (modeCounts[mode] || 0) + 1 };
+      setModeCounts(modeCountsSnapshot);
+
+      // Streak Logic
+      const today = getToday();
+      let newStreak = streakData.current;
+      let newBestStreak = streakData.best;
+      if (streakData.lastPracticeDate !== today) {
+        if (streakData.lastPracticeDate === getYesterday()) {
+          newStreak += 1;
+        } else {
+          newStreak = 1;
+        }
+        newBestStreak = Math.max(newBestStreak, newStreak);
+        setStreakData({ current: newStreak, best: newBestStreak, lastPracticeDate: today });
+      }
+
+      // XP Calculation
+      let gainedXp = Math.floor(liveStats.adjustedWpm * (liveStats.accuracy / 100));
+      if (newStreak >= 3) {
+        gainedXp = Math.floor(gainedXp * 1.5);
+      }
+      
+      const nextTotal = xpData.total + gainedXp;
+      const nextLevel = calculateLevel(nextTotal);
+      setXpData({ total: nextTotal, level: nextLevel });
+      
+      setToastMsg({ id: now, msg: `+${gainedXp} XP earned!`, xp: gainedXp });
+
+      // Achievements Check
+      const prevBest = [...fullHistory, ...history].length > 0
+        ? Math.max(...[...fullHistory, ...history].map((h) => h.wpm))
+        : 0;
+
+      const ctx: AchievementContext = {
+        wpm: liveStats.adjustedWpm,
+        accuracy: liveStats.accuracy,
+        mode,
+        streak: newStreak,
+        level: nextLevel,
+        modeCounts: modeCountsSnapshot,
+        totalRounds: fullHistory.length + 1,
+        prevBest,
+      };
+
+      const newlyUnlocked: string[] = [];
+      ACHIEVEMENTS.forEach((badge) => {
+        if (!unlockedAchievements.includes(badge.id) && badge.check(ctx)) {
+          newlyUnlocked.push(badge.id);
+        }
+      });
+
+      if (newlyUnlocked.length > 0) {
+        setUnlockedAchievements(prev => [...prev, ...newlyUnlocked]);
+        setTimeout(() => {
+          setToastMsg({ id: Date.now(), msg: `Achievement Unlocked: ${ACHIEVEMENTS.find(a => a.id === newlyUnlocked[0])?.name}` });
+        }, 1500);
+      }
+
       // Tell Google Analytics this was an "engaged" session
       if (typeof window !== 'undefined' && window.gtag) {
         window.gtag('event', 'round_complete', {
@@ -628,7 +965,14 @@ export default function App() {
         });
       }
     }
-  }, [finishedAt, isComplete, liveStats.adjustedWpm, liveStats.accuracy, mode, startedAt]);
+  }, [finishedAt, isComplete, liveStats, mode, startedAt, streakData, xpData, modeCounts, fullHistory, history, unlockedAchievements]);
+
+  useEffect(() => {
+    if (toastMsg) {
+      const timer = setTimeout(() => setToastMsg(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMsg]);
 
   const progress = Math.min((typed.length / targetText.length) * 100, 100);
   const mistakes = useMemo(() => {
@@ -676,6 +1020,18 @@ export default function App() {
 
   return (
     <main className="shell">
+      {toastMsg && (
+        <div className="toast-container">
+          <div className="toast fade-in" key={toastMsg.id}>
+            {toastMsg.msg}
+          </div>
+        </div>
+      )}
+      {toastMsg?.xp && (
+        <div className="xp-popup" key={`xp-${toastMsg.id}`}>
+          +{toastMsg.xp} XP
+        </div>
+      )}
       <SeoSchema />
       <section className="hero">
         <div>
@@ -684,17 +1040,22 @@ export default function App() {
         </div>
 
         <div className="hero-card">
-          <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gridColumn: '1 / -1' }}>
+            <StreakBadge streak={streakData.current} />
+            {streakData.current === 0 && <span style={{ color: 'var(--text-soft)', fontSize: '0.85rem' }}>No active streak</span>}
+          </div>
+          <XpBar xpData={xpData} />
+          <div style={{ marginTop: '12px' }}>
             <span className="stat-label">Best score</span>
             <strong>{bestScore}</strong>
           </div>
-          <div>
+          <div style={{ marginTop: '12px' }}>
             <span className="stat-label">Mode</span>
             <strong>{mode}</strong>
           </div>
-          <div>
-            <span className="stat-label">Sessions saved</span>
-            <strong>{history.length}</strong>
+          <div style={{ marginTop: '12px' }}>
+            <span className="stat-label">Sessions</span>
+            <strong>{fullHistory.length}</strong>
           </div>
         </div>
       </section>
@@ -864,6 +1225,9 @@ export default function App() {
               </div>
             )}
           </section>
+
+          <ProgressChart history={fullHistory} />
+          <AchievementsPanel unlockedIds={unlockedAchievements} />
         </div>
       </section>
 
